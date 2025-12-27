@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -111,6 +111,32 @@ return [
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Central Database Connection
+        |--------------------------------------------------------------------------
+        |
+        | This connection is used for platform-level data (tenants, domains,
+        | subscriptions). This is separate from tenant databases.
+        |
+        */
+        'central' => [
+            'driver' => 'mysql',
+            'url' => env('CENTRAL_DB_URL'),
+            'host' => env('CENTRAL_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('CENTRAL_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('CENTRAL_DB_DATABASE', 'e_learning_central'),
+            'username' => env('CENTRAL_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('CENTRAL_DB_PASSWORD', env('DB_PASSWORD', 'root')),
+            'unix_socket' => env('CENTRAL_DB_SOCKET', env('DB_SOCKET', '')),
+            'charset' => env('CENTRAL_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('CENTRAL_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
         ],
 
     ],
