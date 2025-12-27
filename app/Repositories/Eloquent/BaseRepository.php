@@ -75,4 +75,46 @@ abstract class BaseRepository implements RepositoryInterface
     {
         // Implement filter logic in child classes
     }
+
+    /**
+     * Get all records without pagination
+     */
+    public function all(array $filters = []): \Illuminate\Database\Eloquent\Collection
+    {
+        $query = $this->model->newQuery();
+
+        // Apply filters
+        $this->applyFilters($query, $filters);
+
+        return $query->get();
+    }
+
+    /**
+     * Find by a specific field
+     */
+    public function findBy(string $field, mixed $value): ?Model
+    {
+        return $this->model->where($field, $value)->first();
+    }
+
+    /**
+     * Check if record exists
+     */
+    public function exists(int $id): bool
+    {
+        return $this->model->where('id', $id)->exists();
+    }
+
+    /**
+     * Count records
+     */
+    public function count(array $filters = []): int
+    {
+        $query = $this->model->newQuery();
+
+        // Apply filters
+        $this->applyFilters($query, $filters);
+
+        return $query->count();
+    }
 }

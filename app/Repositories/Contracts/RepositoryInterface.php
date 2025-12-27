@@ -36,4 +36,24 @@ interface RepositoryInterface
      * Get all records with pagination
      */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get all records without pagination
+     */
+    public function all(array $filters = []): \Illuminate\Database\Eloquent\Collection;
+
+    /**
+     * Find by a specific field
+     */
+    public function findBy(string $field, mixed $value): ?Model;
+
+    /**
+     * Check if record exists
+     */
+    public function exists(int $id): bool;
+
+    /**
+     * Count records
+     */
+    public function count(array $filters = []): int;
 }

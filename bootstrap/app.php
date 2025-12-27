@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     // Remove subdomain middleware from global API routes
     // Admin routes should be accessible from central domain
     // Subdomain middleware will be applied to tenant-specific routes only
+
+    // Sanctum API authentication
+    $middleware->statefulApi();
 })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

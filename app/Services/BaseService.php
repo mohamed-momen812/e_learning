@@ -87,4 +87,36 @@ abstract class BaseService
     {
         return $this->repository->getAll($filters, $perPage);
     }
+
+    /**
+     * Get all resources without pagination
+     */
+    public function all(array $filters = []): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->repository->all($filters);
+    }
+
+    /**
+     * Find by a specific field
+     */
+    public function findBy(string $field, mixed $value): ?Model
+    {
+        return $this->repository->findBy($field, $value);
+    }
+
+    /**
+     * Check if resource exists
+     */
+    public function exists(int $id): bool
+    {
+        return $this->repository->exists($id);
+    }
+
+    /**
+     * Count resources
+     */
+    public function count(array $filters = []): int
+    {
+        return $this->repository->count($filters);
+    }
 }
