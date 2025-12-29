@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
         DB::connection('central')->transaction(function () {
             // Check if admin already exists
             $existingAdmin = User::on('central')
-                ->where('email', 'admin@mawsoaa.com')
+                ->where('email', 'admin@example.com')
                 ->first();
 
             if ($existingAdmin) {
@@ -30,14 +30,14 @@ class AdminSeeder extends Seeder
             // Create super admin user
             $admin = User::on('central')->create([
                 'name' => 'Super Admin',
-                'email' => 'admin@mawsoaa.com',
-                'password' => Hash::make('password'), // Change this in production!
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password123'), // Change this in production!
                 'email_verified_at' => now(),
             ]);
 
             $this->command->info('Super admin user created successfully!');
-            $this->command->info('Email: admin@mawsoaa.com');
-            $this->command->warn('Password: password (Please change this in production!)');
+            $this->command->info('Email: admin@example.com');
+            $this->command->warn('Password: password123 (Please change this in production!)');
         });
     }
 }
