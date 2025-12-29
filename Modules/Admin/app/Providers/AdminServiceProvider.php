@@ -36,17 +36,6 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
-
-        // Bind service interfaces to implementations
-        $this->app->bind(
-            \Modules\Admin\Repositories\Contracts\TenantRepositoryInterface::class,
-            \Modules\Admin\Repositories\Eloquent\TenantRepository::class
-        );
-
-        $this->app->bind(
-            \Modules\Admin\Services\Contracts\TenantServiceInterface::class,
-            \Modules\Admin\Services\Implementation\TenantService::class
-        );
     }
 
     /**

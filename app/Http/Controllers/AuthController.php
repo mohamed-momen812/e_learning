@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\LoginDTO;
-use App\DTOs\RegisterDTO;
+use App\Core\Controllers\BaseApiController;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class AuthController extends BaseApiController
 {
     public function __construct(
-        private AuthService $authService
+        protected AuthService $authService
     ) {}
 
     /**
@@ -22,24 +22,14 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $dto = RegisterDTO::from($request->validated());
-        $authToken = $this->authService->register($dto);
+        $result = $this->authService->register($request->validated());
 
-        return response()->json([
-            'data' => [
-                'type' => 'auth-tokens',
-                'attributes' => [
-                    'token' => $authToken->token,
-                    'token_type' => $authToken->token_type,
-                    'expires_in' => $authToken->expires_in,
-                ],
-                'relationships' => [
-                    'user' => [
-                        'data' => new UserResource($authToken->user),
-                    ],
-                ],
-            ],
-        ], 201);
+        return $this->createdResponse([
+            'token' => $result['token'],
+            'token_type' => $result['token_type'],
+            'expires_in' => $result['expires_in'],
+            'user' => $result['user'],
+        ], 'auth.registered');
     }
 
     /**
@@ -47,53 +37,75 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $dto = LoginDTO::from($request->validated());
-        $authToken = $this->authService->login($dto);
+        $result = $this->authService->login($request->validated());
 
-        return response()->json([
-            'data' => [
-                'type' => 'auth-tokens',
-                'attributes' => [
-                    'token' => $authToken->token,
-                    'token_type' => $authToken->token_type,
-                    'expires_in' => $authToken->expires_in,
-                ],
-                'relationships' => [
-                    'user' => [
-                        'data' => new UserResource($authToken->user),
-                    ],
-                ],
-            ],
-        ]);
+        return $this->successResponse([
+            'token' => $result['token'],
+            'token_type' => $result['token_type'],
+            'expires_in' => $result['expires_in'],
+            'user' => $result['user'],
+        ], 'auth.logged_in');
     }
 
     /**
      * Logout user
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
         $this->authService->logout();
 
-        return response()->json([
-            'message' => 'Successfully logged out',
-        ]);
+        return $this->successResponse(null, 'auth.logged_out');
     }
 
     /**
      * Get current authenticated user
      */
-    public function me(Request $request): JsonResponse
+    public function me(): JsonResponse
     {
         $user = $this->authService->me();
 
         if (!$user) {
-            return response()->json([
-                'message' => 'Unauthenticated',
-            ], 401);
+            return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
-        return response()->json([
-            'data' => new UserResource($user),
+        return $this->successResponse($user, 'data.retrieved');
+    }
+
+    /**
+     * Update current user profile
+     */
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $this->authService->me();
+
+        if (!$user) {
+            return $this->errorResponse('auth.unauthenticated', [], 401);
+        }
+
+        $user->update($request->validated());
+
+        return $this->successResponse($user->fresh(), 'auth.profile_updated');
+    }
+
+    /**
+     * Change password
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $user = $this->authService->me();
+
+        if (!$user) {
+            return $this->errorResponse('auth.unauthenticated', [], 401);
+        }
+
+        if (!Hash::check($request->validated('current_password'), $user->password)) {
+            return $this->errorResponse('auth.invalid_current_password', ['current_password' => ['auth.invalid_current_password']], 422);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->validated('password')),
         ]);
+
+        return $this->successResponse(null, 'auth.password_changed');
     }
 }

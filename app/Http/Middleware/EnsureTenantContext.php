@@ -18,7 +18,8 @@ class EnsureTenantContext
         // Validate that tenant context is initialized
         if (!tenancy()->initialized) {
             return response()->json([
-                'message' => 'Tenant context not initialized',
+                'success' => false,
+                'message' => __('tenant.context_not_initialized'),
             ], 400);
         }
 
@@ -26,7 +27,8 @@ class EnsureTenantContext
         $tenant = tenancy()->tenant;
         if (!$tenant) {
             return response()->json([
-                'message' => 'Tenant not found',
+                'success' => false,
+                'message' => __('tenant.not_found'),
             ], 404);
         }
 

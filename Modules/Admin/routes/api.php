@@ -1,11 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Admin\Http\Controllers\TenantController;
+use Modules\Admin\Http\Controllers\UserController;
+use Modules\Admin\Http\Controllers\RoleController;
+use Modules\Admin\Http\Controllers\PermissionController;
 
-Route::prefix('admin')->group(function () {
-    // Protected super admin routes
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::apiResource('tenants', TenantController::class)->names('admin.tenants');
-    });
-});
+// Routes are loaded via RouteServiceProvider with:
+// - Tenant middleware (InitializeTenancyBySubdomain, PreventAccessFromCentralDomains)
+// - 'api' prefix
+// - 'admin' prefix
+// - 'auth:sanctum' middleware
+
+Route::apiResource('users', UserController::class)->names('admin.users');
+
+Route::apiResource('roles', RoleController::class)->names('admin.roles');
+
+// Permission management (read-only)
+Route::get('permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
+Route::get('permissions/{id}', [PermissionController::class, 'show'])->name('admin.permissions.show');

@@ -18,7 +18,26 @@ return Application::configure(basePath: dirname(__DIR__))
 
     // Sanctum API authentication
     $middleware->statefulApi();
+
+    // Set locale based on Accept-Language header
+    $middleware->append(\App\Http\Middleware\SetLocale::class);
 })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+    // Handle Core exceptions
+    $exceptions->render(function (App\Core\Exceptions\BaseException $e, $request) {
+        return response()->json([
+            'success' => false,
+            'message' => __($e->getMessage()),
+            'errors' => $e->getErrors(),
+        ], $e->getStatusCode());
+    });
+
+    // Handle Laravel validation exceptions
+    $exceptions->render(function (Illuminate\Validation\ValidationException $e, $request) {
+        return response()->json([
+            'success' => false,
+            'message' => __('validation.failed'),
+            'errors' => $e->errors(),
+        ], 422);
+    });
     })->create();

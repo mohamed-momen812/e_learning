@@ -13,8 +13,12 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
+        // Force the default guard to 'web' for this seeder
+        $registrar = app()[\Spatie\Permission\PermissionRegistrar::class];
+        $registrar->setPermissionsTeamId(null);
+
         // Reset cached roles and permissions
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        $registrar->forgetCachedPermissions();
 
         // Create permissions
         $permissions = [
@@ -61,11 +65,17 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create([
+                'name' => $permission,
+                'guard_name' => 'web'
+            ]);
         }
 
         // Create roles and assign permissions
-        $teacher = Role::create(['name' => 'teacher']);
+        $teacher = Role::create([
+            'name' => 'teacher',
+            'guard_name' => 'web'
+        ]);
         $teacher->givePermissionTo([
             'courses.create',
             'courses.view',
@@ -91,7 +101,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'reports.generate',
         ]);
 
-        $assistant = Role::create(['name' => 'assistant']);
+        $assistant = Role::create([
+            'name' => 'assistant',
+            'guard_name' => 'web'
+        ]);
         $assistant->givePermissionTo([
             'courses.view',
             'lessons.view',
@@ -103,7 +116,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'reports.view',
         ]);
 
-        $student = Role::create(['name' => 'student']);
+        $student = Role::create([
+            'name' => 'student',
+            'guard_name' => 'web'
+        ]);
         $student->givePermissionTo([
             'courses.view',
             'lessons.view',
@@ -112,7 +128,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'attendance.view',
         ]);
 
-        $guardian = Role::create(['name' => 'guardian']);
+        $guardian = Role::create([
+            'name' => 'guardian',
+            'guard_name' => 'web'
+        ]);
         $guardian->givePermissionTo([
             'students.view',
             'attendance.view',

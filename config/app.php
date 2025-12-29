@@ -78,9 +78,22 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'ar'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | List of locales supported by the application. The SetLocale middleware
+    | will automatically detect and set the locale based on Accept-Language
+    | header or ?locale parameter.
+    |
+    */
+
+    'supported_locales' => ['en', 'ar'],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

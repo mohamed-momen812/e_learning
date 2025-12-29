@@ -2,50 +2,49 @@
 
 namespace App\Services;
 
-use App\DTOs\AuthTokenDTO;
-use App\DTOs\LoginDTO;
-use App\DTOs\RegisterDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use App\Core\Exceptions\BusinessException;
 
 class AuthService
 {
     /**
      * Authenticate user and return token
      */
-    public function login(LoginDTO $dto): AuthTokenDTO
+    public function login(array $data): array
     {
-        $user = User::where('email', $dto->email)->first();
+        $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($dto->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw new BusinessException(
+                'auth.invalid_credentials',
+                ['email' => ['auth.invalid_credentials']],
+                401
+            );
         }
 
         $token = $user->createToken('auth-token')->plainTextToken;
-        $expiresIn = config('sanctum.expiration', 1440) * 60; // Convert minutes to seconds
+        $expiresIn = config('sanctum.expiration', 1440) * 60;
 
-        return new AuthTokenDTO(
-            token: $token,
-            token_type: 'Bearer',
-            expires_in: $expiresIn,
-            user: $user
-        );
+        return [
+            'token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => $expiresIn,
+            'user' => $user,
+        ];
     }
 
     /**
      * Register a new user
      */
-    public function register(RegisterDTO $dto): AuthTokenDTO
+    public function register(array $data): array
     {
         $user = User::create([
-            'name' => $dto->name,
-            'email' => $dto->email,
-            'phone' => $dto->phone,
-            'password' => Hash::make($dto->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'password' => Hash::make($data['password']),
         ]);
 
         // Assign default role (student) if roles exist
@@ -54,14 +53,14 @@ class AuthService
         }
 
         $token = $user->createToken('auth-token')->plainTextToken;
-        $expiresIn = config('sanctum.expiration', 1440) * 60; // Convert minutes to seconds
+        $expiresIn = config('sanctum.expiration', 1440) * 60;
 
-        return new AuthTokenDTO(
-            token: $token,
-            token_type: 'Bearer',
-            expires_in: $expiresIn,
-            user: $user
-        );
+        return [
+            'token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => $expiresIn,
+            'user' => $user,
+        ];
     }
 
     /**
@@ -84,4 +83,3 @@ class AuthService
         return Auth::user();
     }
 }
-

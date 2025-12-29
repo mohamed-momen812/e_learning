@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'failed' => 'Validation failed',
+    'required' => 'This field is required',
+    'string' => 'This field must be a string',
+    'max' => 'This field must not exceed :max characters',
+    'min' => 'This field must be at least :min characters',
+    'email' => 'This field must be a valid email address',
+    'unique' => 'This value is already taken',
+    'array' => 'This field must be an array',
+    'integer' => 'This field must be an integer',
+    'confirmed' => 'Password confirmation does not match',
+    'in' => 'This field must be one of the following values: :values',
+    'exists' => 'This value does not exist',
+    'boolean' => 'This field must be a boolean',
+    'date' => 'This field must be a valid date',
+    'date_format' => 'This field must be a valid date format',
+    'time' => 'This field must be a valid time',
+    'datetime' => 'This field must be a valid datetime',
+    'email_address' => 'This field must be a valid email address',
+    'url' => 'This field must be a valid url',
+    'ip' => 'This field must be a valid ip address',
+    'mac_address' => 'This field must be a valid mac address',
+];

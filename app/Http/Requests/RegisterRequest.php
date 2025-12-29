@@ -17,8 +17,6 @@ class RegisterRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -32,19 +30,18 @@ class RegisterRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
      */
     public function messages(): array
     {
         return [
-            'name.required' => 'The name field is required.',
-            'email.required' => 'The email field is required.',
-            'email.email' => 'The email must be a valid email address.',
-            'email.unique' => 'The email has already been taken.',
-            'password.required' => 'The password field is required.',
-            'password.confirmed' => 'The password confirmation does not match.',
+            'name.required' => 'validation.required',
+            'name.string' => 'validation.string',
+            'name.max' => 'validation.max',
+            'email.required' => 'validation.required',
+            'email.email' => 'validation.email',
+            'email.unique' => 'validation.unique',
+            'password.required' => 'validation.required',
+            'password.confirmed' => 'validation.confirmed',
         ];
     }
 }
-

@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Admin\Http\Controllers\AdminController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('admins', AdminController::class)->names('admin');
-});
+// Admin web routes (if needed in the future)
+// Currently, Admin module only uses API routes for tenant admin functionality
+// API routes are loaded in routes/tenant.php with tenant middleware
