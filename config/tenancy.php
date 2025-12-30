@@ -20,6 +20,8 @@ return [
         '127.0.0.1',
         'localhost',
         'e_learning.test',
+        '138.68.145.101',
+        'api.mawsoaa.com',
     ],
 
     /**
