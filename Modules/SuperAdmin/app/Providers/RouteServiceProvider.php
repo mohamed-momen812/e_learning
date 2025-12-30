@@ -49,8 +49,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         foreach (config('tenancy.central_domains') as $domain) {
             Route::domain($domain)->group(function () {
-                Route::prefix('super-admin')->middleware('auth:sanctum')->group(function () {
-                    require module_path($this->name, '/routes/api.php');
+                Route::prefix('api')->group(function () {
+                    Route::prefix('super-admin')->middleware('auth:sanctum')->group(function () {
+                        require module_path($this->name, '/routes/api.php');
+                    });
                 });
             });
         }
