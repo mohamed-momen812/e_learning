@@ -2,6 +2,7 @@
 
 namespace Modules\Admin\Providers;
 
+use App\Http\Middleware\InitializeTenancyByHeader;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
@@ -51,8 +52,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware([
             'api',
-            InitializeTenancyBySubdomain::class,
-            PreventAccessFromCentralDomains::class,
+            InitializeTenancyByHeader::class,
         ])->prefix('api')->group(function () {
             Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
                 require module_path($this->name, '/routes/api.php');

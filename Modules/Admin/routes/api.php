@@ -6,7 +6,7 @@ use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\PermissionController;
 
 // Routes are loaded via RouteServiceProvider with:
-// - Tenant middleware (InitializeTenancyBySubdomain, PreventAccessFromCentralDomains)
+// - Tenant middleware (InitializeTenancyByHeader)
 // - 'api' prefix
 // - 'admin' prefix
 // - 'auth:sanctum' middleware

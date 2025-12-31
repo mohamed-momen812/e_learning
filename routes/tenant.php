@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\InitializeTenancyByHeader;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
@@ -20,8 +21,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 Route::middleware([
     'api',
-    InitializeTenancyBySubdomain::class,
-    PreventAccessFromCentralDomains::class,
+    InitializeTenancyByHeader::class,
 ])->prefix('api')->group(function () {
     // Get current tenant info
     Route::get('/tenant/info', function () {
