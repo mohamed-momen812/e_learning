@@ -119,8 +119,9 @@ class AuthService
             'password' => Hash::make($data['password']),
         ]);
 
-        // Assign default role (student) if roles exist
-        if (method_exists($user, 'assignRole')) {
+        // Assign default role (student) only if we're in a tenant context
+        // Roles only exist in tenant databases, not in central database
+        if (tenancy()->initialized && method_exists($user, 'assignRole')) {
             $user->assignRole('student');
         }
 
