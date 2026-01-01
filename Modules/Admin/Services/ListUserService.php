@@ -3,10 +3,12 @@
 namespace Modules\Admin\Services;
 
 use App\Models\User;
+use App\Core\Traits\HasDynamicOrdering;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListUserService
 {
+    use HasDynamicOrdering;
     /**
      * Handle list request
      */
@@ -15,27 +17,29 @@ class ListUserService
         $with = $params['with'] ?? [];
         $filters = $params['filters'] ?? [];
         $search = $params['search'] ?? '';
-        $sort = $params['sort'] ?? 'created_at';
+        $sort = $params['sort'] ?? 'display_order';
         $per_page = $params['per_page'] ?? 15;
         $page = $params['page'] ?? 1;
 
         $query = User::query();
 
+        // Exclude admin users (teacher and assistant roles)
+        $query->whereDoesntHave('roles', function ($q) {
+            $q->whereIn('name', ['teacher']);
+        });
+
         if (!empty($with)) {
             $query->with($with);
         }
 
-        // Filter by role
         if (isset($filters['role'])) {
             $query->role($filters['role']);
         }
 
-        // Filter by email
         if (isset($filters['email'])) {
             $query->where('email', 'like', '%' . $filters['email'] . '%');
         }
 
-        // Search
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
@@ -44,10 +48,9 @@ class ListUserService
             });
         }
 
-        // Sort
-        $sortField = ltrim($sort, '-');
-        $sortDirection = str_starts_with($sort, '-') ? 'desc' : 'asc';
-        $query->orderBy($sortField, $sortDirection);
+        // Apply dynamic ordering
+        $allowedSortFields = ['id', 'display_order', 'name', 'email', 'phone', 'created_at', 'updated_at'];
+        $this->applyOrdering($query, $sort, $allowedSortFields, 'display_order');
 
         return $query->paginate($per_page, ['*'], 'page', $page);
     }

@@ -17,6 +17,7 @@ class CreateTenantsTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
+            $table->integer('display_order')->default(0);
 
             $table->string('name');
             $table->string('email')->unique()->nullable();
@@ -26,6 +27,8 @@ class CreateTenantsTable extends Migration
 
             $table->timestamps();
             $table->json('data')->nullable();
+
+            $table->index('display_order');
         });
     }
 

@@ -29,7 +29,6 @@ class TenancyServiceProvider extends ServiceProvider
                     Jobs\MigrateDatabase::class,
                     Jobs\SeedDatabase::class, // Seed tenant database with roles and permissions
 
-                    // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
 
                 ])->send(function (Events\TenantCreated $event) {
@@ -62,7 +61,6 @@ class TenancyServiceProvider extends ServiceProvider
             // Database events
             Events\DatabaseCreated::class => [],
             Events\DatabaseMigrated::class => [],
-            Events\DatabaseSeeded::class => [],
             Events\DatabaseRolledBack::class => [],
             Events\DatabaseDeleted::class => [],
 

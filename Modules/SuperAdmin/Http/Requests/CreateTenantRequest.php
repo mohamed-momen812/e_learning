@@ -11,7 +11,7 @@ class CreateTenantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO: Add super admin authorization check
+        // Authorization is handled in the controller via TenantPolicy
         return true;
     }
 
@@ -23,22 +23,14 @@ class CreateTenantRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255', 'unique:domains,domain'],
-        ];
-    }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'validation.required',
-            'name.string' => 'validation.string',
-            'name.max' => 'validation.max',
-            'domain.required' => 'validation.required',
-            'domain.string' => 'validation.string',
-            'domain.max' => 'validation.max',
-            'domain.unique' => 'validation.unique',
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
+            'teacher_user' => ['required', 'array'],
+            'teacher_user.name' => ['required', 'string', 'max:255'],
+            'teacher_user.email' => ['required', 'email', 'max:255'],
+            'teacher_user.password' => ['required', 'string', 'min:8'],
+            'teacher_user.phone' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

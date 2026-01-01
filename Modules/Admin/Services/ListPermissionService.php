@@ -3,10 +3,12 @@
 namespace Modules\Admin\Services;
 
 use Spatie\Permission\Models\Permission;
+use App\Core\Traits\HasDynamicOrdering;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListPermissionService
 {
+    use HasDynamicOrdering;
     /**
      * Handle list request
      */
@@ -14,7 +16,7 @@ class ListPermissionService
     {
         $filters = $params['filters'] ?? [];
         $search = $params['search'] ?? '';
-        $sort = $params['sort'] ?? 'name';
+        $sort = $params['sort'] ?? 'display_order';
         $per_page = $params['per_page'] ?? 50;
         $page = $params['page'] ?? 1;
 
@@ -30,10 +32,9 @@ class ListPermissionService
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        // Sort
-        $sortField = ltrim($sort, '-');
-        $sortDirection = str_starts_with($sort, '-') ? 'desc' : 'asc';
-        $query->orderBy($sortField, $sortDirection);
+        // Apply dynamic ordering
+        $allowedSortFields = ['id', 'display_order', 'name', 'created_at', 'updated_at'];
+        $this->applyOrdering($query, $sort, $allowedSortFields, 'display_order');
 
         return $query->paginate($per_page, ['*'], 'page', $page);
     }

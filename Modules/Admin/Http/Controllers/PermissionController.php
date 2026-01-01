@@ -5,7 +5,9 @@ namespace Modules\Admin\Http\Controllers;
 use App\Core\Controllers\BaseApiController;
 use Modules\Admin\Services\PermissionService;
 use Modules\Admin\Services\ListPermissionService;
+use Modules\Admin\Services\UpdateDisplayOrderService;
 use Modules\Admin\Http\Requests\IndexPermissionRequest;
+use Modules\Admin\Http\Requests\UpdatePermissionDisplayOrderRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +15,8 @@ class PermissionController extends BaseApiController
 {
     public function __construct(
         protected PermissionService $service,
-        protected ListPermissionService $listService
+        protected ListPermissionService $listService,
+        protected UpdateDisplayOrderService $orderService
     ) {
         // Authorization is handled in each method
     }
@@ -26,7 +29,7 @@ class PermissionController extends BaseApiController
         $this->authorizePermissionAccess();
         $defaultFilters = [];
         $defaultSearch = '';
-        $defaultSort = 'name';
+        $defaultSort = 'display_order';
         $defaultPerPage = 50;
         $defaultPage = 1;
 
@@ -52,6 +55,22 @@ class PermissionController extends BaseApiController
         $permission = $this->service->findOrFail($id);
 
         return $this->successResponse($permission, 'data.retrieved');
+    }
+
+    /**
+     * Update display order for permissions
+     */
+    public function updateOrder(UpdatePermissionDisplayOrderRequest $request): JsonResponse
+    {
+        $this->authorizePermissionAccess();
+        
+        if ($request->has('ids')) {
+            $this->orderService->reorderPermissionsByIds($request->validated('ids'));
+        } else {
+            $this->orderService->updatePermissionOrder($request->validated('orders'));
+        }
+        
+        return $this->successResponse(null, 'permission.order_updated');
     }
 
     /**

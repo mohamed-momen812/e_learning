@@ -24,6 +24,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'is_super_admin',
+        'display_order',
     ];
 
     /**
@@ -46,7 +48,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_super_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Check if the user is a super admin.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_super_admin === true;
     }
 
     protected $guard_name = 'web';

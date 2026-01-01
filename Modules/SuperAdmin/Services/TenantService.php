@@ -5,6 +5,7 @@ namespace Modules\SuperAdmin\Services;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class TenantService
 {
@@ -14,9 +15,15 @@ class TenantService
     public function create(array $data): Model
     {
         return DB::connection('central')->transaction(function () use ($data) {
+            // Get the next display_order value
+            $maxOrder = Tenant::max('display_order') ?? 0;
+            
             $tenant = Tenant::create([
                 'name' => $data['name'],
-                'data' => [],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'password' => Hash::make($data['password']),
+                'display_order' => $maxOrder + 1,
             ]);
 
             $tenant->domains()->create([
@@ -26,6 +33,7 @@ class TenantService
             // The TenantCreated event will automatically:
             // 1. Create the tenant database
             // 2. Run migrations on the tenant database and seed the data
+            // 3. TenantDatabaseSeeder will create the teacher user
 
             return $tenant->fresh(['domains']);
         });

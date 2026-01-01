@@ -7,15 +7,18 @@ use App\Models\User;
 use Modules\Admin\Http\Requests\CreateUserRequest;
 use Modules\Admin\Http\Requests\UpdateUserRequest;
 use Modules\Admin\Http\Requests\IndexUserRequest;
+use Modules\Admin\Http\Requests\UpdateDisplayOrderRequest;
 use Modules\Admin\Services\UserService;
 use Modules\Admin\Services\ListUserService;
+use Modules\Admin\Services\UpdateDisplayOrderService;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends BaseApiController
 {
     public function __construct(
         protected UserService $service,
-        protected ListUserService $listService
+        protected ListUserService $listService,
+        protected UpdateDisplayOrderService $orderService
     ) {
         // Authorization is handled via policies in each method
     }
@@ -29,7 +32,7 @@ class UserController extends BaseApiController
         $defaultWith = ['roles'];
         $defaultFilters = [];
         $defaultSearch = '';
-        $defaultSort = 'created_at';
+        $defaultSort = 'display_order';
         $defaultPerPage = 15;
         $defaultPage = 1;
 
@@ -91,5 +94,23 @@ class UserController extends BaseApiController
         $this->service->delete($id);
 
         return $this->noContentResponse();
+    }
+
+    /**
+     * Update display order for users
+     */
+    public function updateOrder(UpdateDisplayOrderRequest $request): JsonResponse
+    {
+        $this->authorize('update', User::class);
+        
+        // If ids array is provided, use simpler reorder method
+        if ($request->has('ids')) {
+            $this->orderService->reorderUsersByIds($request->validated('ids'));
+        } else {
+            // Otherwise use explicit orders array
+            $this->orderService->updateUserOrder($request->validated('orders'));
+        }
+        
+        return $this->successResponse(null, 'user.order_updated');
     }
 }

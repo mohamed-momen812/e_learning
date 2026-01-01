@@ -3,6 +3,7 @@
 namespace Modules\SuperAdmin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Models\Tenant;
 use Modules\SuperAdmin\Http\Requests\CreateTenantRequest;
 use Modules\SuperAdmin\Http\Requests\IndexTenantRequest;
 use Modules\SuperAdmin\Services\TenantService;
@@ -15,7 +16,6 @@ class TenantController extends BaseApiController
         protected TenantService $service,
         protected ListTenantService $listService
     ) {
-        // TODO: Add authorization middleware for super admin
     }
 
     /**
@@ -23,10 +23,12 @@ class TenantController extends BaseApiController
      */
     public function index(IndexTenantRequest $request): JsonResponse
     {
+        $this->authorize('viewAny', Tenant::class);
+
         $defaultWith = ['domains'];
         $defaultFilters = [];
         $defaultSearch = '';
-        $defaultSort = 'created_at';
+        $defaultSort = 'display_order';
         $defaultPerPage = 15;
         $defaultPage = 1;
 
@@ -49,6 +51,8 @@ class TenantController extends BaseApiController
      */
     public function store(CreateTenantRequest $request): JsonResponse
     {
+        $this->authorize('create', Tenant::class);
+
         $tenant = $this->service->create($request->validated());
 
         return $this->createdResponse($tenant, 'tenant.created');
@@ -60,6 +64,7 @@ class TenantController extends BaseApiController
     public function show(string $id): JsonResponse
     {
         $tenant = $this->service->findOrFail($id);
+        $this->authorize('view', $tenant);
 
         return $this->successResponse($tenant, 'data.retrieved');
     }
@@ -69,6 +74,9 @@ class TenantController extends BaseApiController
      */
     public function update(CreateTenantRequest $request, string $id): JsonResponse
     {
+        $tenant = $this->service->findOrFail($id);
+        $this->authorize('update', $tenant);
+
         $tenant = $this->service->update($id, $request->validated());
 
         return $this->successResponse($tenant, 'tenant.updated');
@@ -79,6 +87,9 @@ class TenantController extends BaseApiController
      */
     public function destroy(string $id): JsonResponse
     {
+        $tenant = $this->service->findOrFail($id);
+        $this->authorize('delete', $tenant);
+
         $this->service->delete($id);
 
         return $this->noContentResponse();

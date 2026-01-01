@@ -7,6 +7,10 @@ return [
     'invalid_credentials' => 'بيانات الاعتماد غير صحيحة',
     'invalid_current_password' => 'كلمة المرور الحالية غير صحيحة',
     'unauthenticated' => 'غير مصادق عليه',
+    'unauthorized' => 'هذا الإجراء غير مصرح به.',
+    'unauthorized_super_admin_access' => 'ليس لديك صلاحية للوصول إلى لوحة تحكم المشرف الرئيسي.',
+    'unauthorized_admin_access' => 'ليس لديك صلاحية للوصول إلى لوحة تحكم الإدارة.',
+    'admin_must_use_dashboard' => 'يجب على المستخدمين الإداريين تسجيل الدخول عبر لوحة تحكم الإدارة.',
     'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
     'password_changed' => 'تم تغيير كلمة المرور بنجاح',
 ];

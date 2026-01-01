@@ -12,9 +12,13 @@ class RoleService
      */
     public function createRole(string $name, array $permissions = []): Model
     {
+        // Get the next display_order value
+        $maxOrder = Role::where('guard_name', 'web')->max('display_order') ?? 0;
+        
         $role = Role::create([
             'name' => $name,
-            'guard_name' => 'web' // Always use 'web' guard
+            'guard_name' => 'web', // Always use 'web' guard
+            'display_order' => $maxOrder + 1,
         ]);
 
         if (!empty($permissions)) {

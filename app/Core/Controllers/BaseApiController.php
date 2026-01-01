@@ -2,12 +2,15 @@
 
 namespace App\Core\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseApiController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Return success response
      */

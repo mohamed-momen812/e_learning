@@ -33,11 +33,41 @@ class AuthController extends BaseApiController
     }
 
     /**
-     * Login user
+     * Login user 
      */
     public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->authService->login($request->validated());
+
+        return $this->successResponse([
+            'token' => $result['token'],
+            'token_type' => $result['token_type'],
+            'expires_in' => $result['expires_in'],
+            'user' => $result['user'],
+        ], 'auth.logged_in');
+    }
+
+    /**
+     * Login admin (only teacher/assistant users can login here)
+     */
+    public function adminLogin(LoginRequest $request): JsonResponse
+    {
+        $result = $this->authService->adminLogin($request->validated());
+
+        return $this->successResponse([
+            'token' => $result['token'],
+            'token_type' => $result['token_type'],
+            'expires_in' => $result['expires_in'],
+            'user' => $result['user'],
+        ], 'auth.logged_in');
+    }
+
+    /**
+     * Login super admin (only super admin users can login here)
+     */
+    public function superAdminLogin(LoginRequest $request): JsonResponse
+    {
+        $result = $this->authService->superAdminLogin($request->validated());
 
         return $this->successResponse([
             'token' => $result['token'],

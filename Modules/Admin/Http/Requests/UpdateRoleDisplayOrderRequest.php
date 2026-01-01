@@ -3,9 +3,8 @@
 namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class CreateRoleRequest extends FormRequest
+class UpdateRoleDisplayOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,10 +20,12 @@ class CreateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->where('guard_name', 'web')],
-            'permissions' => ['sometimes', 'array'],
-            'permissions.*' => ['sometimes', 'string', Rule::exists('permissions', 'name')->where('guard_name', 'web')],
+            'orders' => 'sometimes|array',
+            'orders.*.id' => 'required_with:orders|integer|exists:roles,id',
+            'orders.*.display_order' => 'required_with:orders|integer|min:0',
+
+            'ids' => 'required_without:orders|array',
+            'ids.*' => 'required_without:orders|integer|exists:roles,id',
         ];
     }
 }
-

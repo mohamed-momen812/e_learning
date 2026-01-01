@@ -36,18 +36,5 @@ class UpdateUserRequest extends FormRequest
             'roles.*' => ['sometimes', 'string', Rule::exists('roles', 'name')->where('guard_name', 'web')],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'name.string' => 'validation.string',
-            'email.email' => 'validation.email',
-            'email.unique' => 'validation.unique',
-            'password.min' => 'validation.min.string',
-        ];
-    }
 }
 

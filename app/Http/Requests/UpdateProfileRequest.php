@@ -34,20 +34,5 @@ class UpdateProfileRequest extends FormRequest
             'phone' => ['sometimes', 'nullable', 'string', 'max:20'],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'name.string' => 'validation.string',
-            'name.max' => 'validation.max',
-            'email.email' => 'validation.email',
-            'email.unique' => 'validation.unique',
-            'phone.string' => 'validation.string',
-            'phone.max' => 'validation.max',
-        ];
-    }
 }
 

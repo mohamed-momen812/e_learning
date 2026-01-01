@@ -11,7 +11,7 @@ class IndexTenantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO: Add super admin authorization check
+        // Authorization is handled in the controller via TenantPolicy
         return true;
     }
 

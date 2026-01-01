@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
             'api',
             InitializeTenancyByHeader::class,
         ])->prefix('api')->group(function () {
-            Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+            Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
                 require module_path($this->name, '/routes/api.php');
             });
         });

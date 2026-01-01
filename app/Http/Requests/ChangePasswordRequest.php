@@ -25,17 +25,5 @@ class ChangePasswordRequest extends FormRequest
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'current_password.required' => 'validation.required',
-            'password.required' => 'validation.required',
-            'password.confirmed' => 'validation.confirmed',
-        ];
-    }
 }
 

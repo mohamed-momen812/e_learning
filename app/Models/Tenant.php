@@ -21,6 +21,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'password',
         'is_active',
         'data',
+        'display_order',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     /**
@@ -36,6 +41,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'phone',
             'password',
             'is_active',
+            'display_order',
         ];
     }
 }

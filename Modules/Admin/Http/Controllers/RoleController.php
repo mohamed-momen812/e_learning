@@ -6,8 +6,10 @@ use App\Core\Controllers\BaseApiController;
 use Modules\Admin\Http\Requests\CreateRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Http\Requests\IndexRoleRequest;
+use Modules\Admin\Http\Requests\UpdateRoleDisplayOrderRequest;
 use Modules\Admin\Services\RoleService;
 use Modules\Admin\Services\ListRoleService;
+use Modules\Admin\Services\UpdateDisplayOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +17,8 @@ class RoleController extends BaseApiController
 {
     public function __construct(
         protected RoleService $service,
-        protected ListRoleService $listService
+        protected ListRoleService $listService,
+        protected UpdateDisplayOrderService $orderService
     ) {
         // Authorization is handled in each method
     }
@@ -29,7 +32,7 @@ class RoleController extends BaseApiController
         $defaultWith = ['permissions'];
         $defaultFilters = [];
         $defaultSearch = '';
-        $defaultSort = 'name';
+        $defaultSort = 'display_order';
         $defaultPerPage = 15;
         $defaultPage = 1;
 
@@ -96,6 +99,22 @@ class RoleController extends BaseApiController
         $this->service->deleteRole($id);
 
         return $this->noContentResponse();
+    }
+
+    /**
+     * Update display order for roles
+     */
+    public function updateOrder(UpdateRoleDisplayOrderRequest $request): JsonResponse
+    {
+        $this->authorizeRoleAccess();
+        
+        if ($request->has('ids')) {
+            $this->orderService->reorderRolesByIds($request->validated('ids'));
+        } else {
+            $this->orderService->updateRoleOrder($request->validated('orders'));
+        }
+        
+        return $this->successResponse(null, 'role.order_updated');
     }
 
     /**

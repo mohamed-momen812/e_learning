@@ -23,32 +23,27 @@ Route::middleware([
     'api',
     InitializeTenancyByHeader::class,
 ])->prefix('api')->group(function () {
-    // Get current tenant info
-    Route::get('/tenant/info', function () {
-        $tenant = tenant();
-        return response()->json([
-            'tenant_id' => tenant('id'),
-            'tenant_name' => $tenant->name ?? null,
-            'domain' => $tenant->domains->first()?->domain ?? null,
-            'database' => $tenant->database()->getName() ?? null,
-        ]);
+    // Admin routes - for teacher and assistant dashboard
+    Route::prefix('admin')->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::post('/login', [AuthController::class, 'adminLogin']);
+        });
+
+        Route::prefix('auth')->middleware(['auth:sanctum', 'admin'])->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']);
+            Route::get('/me', [AuthController::class, 'me']);
+            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::post('/change-password', [AuthController::class, 'changePassword']);
+        });
     });
 
-    // Example: Get tenant-specific data
-    Route::get('/tenant/data', function () {
-        // All database queries here automatically use tenant database
-        return response()->json([
-            'message' => 'This is tenant-specific data',
-            'tenant_id' => tenant('id'),
-            'current_database' => DB::connection()->getDatabaseName(),
-        ]);
-    });
-
+    // Auth routes for students
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
     });
 
+    // Auth routes for students (protected)
     Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);

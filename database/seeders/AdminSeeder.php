@@ -33,6 +33,7 @@ class AdminSeeder extends Seeder
                 'email' => 'admin@example.com',
                 'password' => Hash::make('password123'), // Change this in production!
                 'email_verified_at' => now(),
+                'is_super_admin' => true,
             ]);
 
             $this->command->info('Super admin user created successfully!');

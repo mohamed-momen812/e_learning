@@ -3,10 +3,12 @@
 namespace Modules\SuperAdmin\Services;
 
 use App\Models\Tenant;
+use App\Core\Traits\HasDynamicOrdering;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListTenantService
 {
+    use HasDynamicOrdering;
     /**
      * Handle list request
      */
@@ -15,7 +17,7 @@ class ListTenantService
         $with = $params['with'];
         $filters = $params['filters'];
         $search = $params['search'];
-        $sort = $params['sort'];
+        $sort = $params['sort'] ?? 'display_order';
         $per_page = $params['per_page'];
         $page = $params['page'];
 
@@ -40,10 +42,9 @@ class ListTenantService
             });
         }
 
-        $sortField = ltrim($sort, '-');
-        $sortDirection = str_starts_with($sort, '-') ? 'desc' : 'asc';
-
-        $query->orderBy($sortField, $sortDirection);
+        // Apply dynamic ordering
+        $allowedSortFields = ['id', 'display_order', 'name', 'email', 'is_active', 'created_at', 'updated_at'];
+        $this->applyOrdering($query, $sort, $allowedSortFields, 'display_order');
 
         return $query->paginate($per_page, ['*'], 'page', $page);
     }

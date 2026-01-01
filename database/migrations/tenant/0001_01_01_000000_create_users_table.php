@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->integer('display_order')->default(0)->after('id');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
@@ -23,6 +24,7 @@ return new class extends Migration
 
             // Indexes
             $table->index('email');
+            $table->index('display_order');
         });
     }
 
