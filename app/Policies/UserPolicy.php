@@ -63,5 +63,14 @@ class UserPolicy
         // Only teachers can delete users
         return $user->hasRole('teacher');
     }
+
+    /**
+     * Determine if the user can update display order (bulk operation).
+     */
+    public function updateOrder(User $user): bool
+    {
+        // Only teachers can update display order (affects multiple users)
+        return $user->hasRole('teacher');
+    }
 }
 

@@ -39,10 +39,40 @@ abstract class BaseApiController extends Controller
         ];
         
         if (!empty($errors)) {
-            $response['errors'] = $errors;
+            $response['errors'] = $this->translateErrors($errors);
         }
         
         return response()->json($response, $statusCode);
+    }
+
+    /**
+     * Translate error messages recursively
+     * 
+     * @param array $errors
+     * @return array
+     */
+    protected function translateErrors(array $errors): array
+    {
+        $translatedErrors = [];
+
+        foreach ($errors as $field => $messages) {
+            // Ensure messages is always an array
+            $messageArray = is_array($messages) ? $messages : [$messages];
+
+            $translatedErrors[$field] = array_map(function ($message) {
+                // If message looks like a translation key (e.g., "auth.invalid_credentials"),
+                // translate it
+                if (is_string($message) && preg_match('/^[a-z_]+\.[a-z_]+(\.[a-z_]+)*$/i', $message)) {
+                    $translated = __($message);
+                    // Only use translation if it's different from the key (translation exists)
+                    return $translated !== $message ? $translated : $message;
+                }
+                // Already translated or not a translation key, return as-is
+                return $message;
+            }, $messageArray);
+        }
+
+        return $translatedErrors;
     }
     
     /**

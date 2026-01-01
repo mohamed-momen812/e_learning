@@ -27,21 +27,4 @@ class RegisterRequest extends FormRequest
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'validation.required',
-            'name.string' => 'validation.string',
-            'name.max' => 'validation.max',
-            'email.required' => 'validation.required',
-            'email.email' => 'validation.email',
-            'email.unique' => 'validation.unique',
-            'password.required' => 'validation.required',
-            'password.confirmed' => 'validation.confirmed',
-        ];
-    }
 }

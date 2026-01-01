@@ -37,17 +37,19 @@ Route::middleware([
         });
     });
 
-    // Auth routes for students
-    Route::prefix('auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-    });
+    // Auth routes for students (tenant context)
+    Route::prefix('tenant')->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::post('/register', [AuthController::class, 'register']);
+            Route::post('/login', [AuthController::class, 'login']);
+        });
 
-    // Auth routes for students (protected)
-    Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::put('/profile', [AuthController::class, 'updateProfile']);
-        Route::post('/change-password', [AuthController::class, 'changePassword']);
+        // Auth routes for students (protected)
+        Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']);
+            Route::get('/me', [AuthController::class, 'me']);
+            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::post('/change-password', [AuthController::class, 'changePassword']);
+        });
     });
 });

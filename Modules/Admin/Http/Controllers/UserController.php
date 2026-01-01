@@ -101,7 +101,7 @@ class UserController extends BaseApiController
      */
     public function updateOrder(UpdateDisplayOrderRequest $request): JsonResponse
     {
-        $this->authorize('update', User::class);
+        $this->authorize('updateOrder', User::class);
         
         // If ids array is provided, use simpler reorder method
         if ($request->has('ids')) {
