@@ -26,11 +26,6 @@ class CreateTenantRequest extends FormRequest
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
-            'teacher_user' => ['required', 'array'],
-            'teacher_user.name' => ['required', 'string', 'max:255'],
-            'teacher_user.email' => ['required', 'email', 'max:255'],
-            'teacher_user.password' => ['required', 'string', 'min:8'],
-            'teacher_user.phone' => ['nullable', 'string', 'max:255'],
         ];
     }
 }
