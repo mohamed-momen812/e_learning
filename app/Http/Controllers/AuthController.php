@@ -7,15 +7,17 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
+use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends BaseApiController
 {
     public function __construct(
-        protected AuthService $authService
+        protected AuthService $authService,
+        protected ImageService $imageService
     ) {}
 
     /**
@@ -23,13 +25,19 @@ class AuthController extends BaseApiController
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService->register($request->validated());
+        $data = $request->validated();
+        $avatar = $request->file('avatar');
+
+        // Remove avatar from data array as it's handled separately
+        unset($data['avatar']);
+
+        $result = $this->authService->register($data, $avatar);
 
         return $this->createdResponse([
             'token' => $result['token'],
             'token_type' => $result['token_type'],
             'expires_in' => $result['expires_in'],
-            'user' => $result['user'],
+            'user' => new UserResource($result['user']->load('avatar')),
         ], 'auth.registered');
     }
 
@@ -44,7 +52,7 @@ class AuthController extends BaseApiController
             'token' => $result['token'],
             'token_type' => $result['token_type'],
             'expires_in' => $result['expires_in'],
-            'user' => $result['user'],
+            'user' => new UserResource($result['user']->load('avatar')),
         ], 'auth.logged_in');
     }
 
@@ -59,7 +67,7 @@ class AuthController extends BaseApiController
             'token' => $result['token'],
             'token_type' => $result['token_type'],
             'expires_in' => $result['expires_in'],
-            'user' => $result['user'],
+            'user' => new UserResource($result['user']->load(['avatar', 'roles'])),
         ], 'auth.logged_in');
     }
 
@@ -74,7 +82,7 @@ class AuthController extends BaseApiController
             'token' => $result['token'],
             'token_type' => $result['token_type'],
             'expires_in' => $result['expires_in'],
-            'user' => $result['user'],
+            'user' => new UserResource($result['user']->load('avatar')),
         ], 'auth.logged_in');
     }
 
@@ -99,7 +107,10 @@ class AuthController extends BaseApiController
             return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
-        return $this->successResponse($user, 'data.retrieved');
+        return $this->successResponse(
+            new UserResource($user->load('avatar', 'roles')),
+            'data.retrieved'
+        );
     }
 
     /**
@@ -113,9 +124,21 @@ class AuthController extends BaseApiController
             return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
-        $user->update($request->validated());
+        $data = $request->validated();
 
-        return $this->successResponse($user->fresh(), 'auth.profile_updated');
+        if ($request->hasFile('avatar')) {
+            $this->imageService->uploadAndAttach($user, $request->file('avatar'), 'avatar');
+            unset($data['avatar']); // Remove from data array as it's not a user field
+        }
+
+        if (!empty($data)) {
+            $user->update($data);
+        }
+
+        return $this->successResponse(
+            new UserResource($user->load('avatar', 'roles')),
+            'auth.profile_updated'
+        );
     }
 
     /**

@@ -3,15 +3,21 @@
 namespace Modules\Admin\Services;
 
 use App\Models\User;
+use App\Services\ImageService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
+    public function __construct(
+        protected ImageService $imageService
+    ) {}
+
     /**
      * Create a new user (prevents assigning admin roles)
      */
-    public function create(array $data): Model
+    public function create(array $data, ?UploadedFile $avatar = null): Model
     {
         // Get the next display_order value
         $maxOrder = User::max('display_order') ?? 0;
@@ -24,6 +30,11 @@ class UserService
             'display_order' => $maxOrder + 1,
         ]);
 
+        // Handle avatar upload if provided
+        if ($avatar && $avatar->isValid()) {
+            $this->imageService->uploadAndAttach($user, $avatar, 'avatar');
+        }
+
         // Assign roles if provided (but filter out admin roles)
         if (isset($data['roles']) && is_array($data['roles'])) {
             // Filter out admin roles
@@ -35,13 +46,13 @@ class UserService
             }
         }
 
-        return $user->fresh(['roles']);
+        return $user->fresh(['roles', 'avatar']);
     }
 
     /**
      * Update user (excludes admin users)
      */
-    public function update(string $id, array $data): Model
+    public function update(string $id, array $data, ?UploadedFile $avatar = null): Model
     {
         $user = User::with('roles')->findOrFail($id);
 
@@ -72,6 +83,11 @@ class UserService
             $user->update($updateData);
         }
 
+        // Handle avatar upload if provided
+        if ($avatar && $avatar->isValid()) {
+            $this->imageService->uploadAndAttach($user, $avatar, 'avatar');
+        }
+
         // Sync roles if provided (but prevent assigning admin roles)
         if (isset($data['roles']) && is_array($data['roles'])) {
             // Filter out admin roles
@@ -81,7 +97,7 @@ class UserService
             $user->syncRoles($filteredRoles);
         }
 
-        return $user->fresh(['roles']);
+        return $user->fresh(['roles', 'avatar']);
     }
 
     /**

@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Core\Exceptions\BusinessException;
 
 class AuthService
 {
+    public function __construct(
+        protected ImageService $imageService
+    ) {}
     /**
      * Authenticate user and return token
      */
@@ -110,7 +114,7 @@ class AuthService
     /**
      * Register a new user
      */
-    public function register(array $data): array
+    public function register(array $data, ?UploadedFile $avatar = null): array
     {
         $user = User::create([
             'name' => $data['name'],
@@ -118,6 +122,10 @@ class AuthService
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
         ]);
+
+        if ($avatar && $avatar->isValid()) {
+            $this->imageService->uploadAndAttach($user, $avatar, 'avatar');
+        }
 
         // Assign default role (student) only if we're in a tenant context
         // Roles only exist in tenant databases, not in central database
@@ -132,7 +140,7 @@ class AuthService
             'token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => $expiresIn,
-            'user' => $user,
+            'user' => $user->fresh(['avatar']),
         ];
     }
 

@@ -93,12 +93,20 @@ abstract class BaseApiController extends Controller
     
     /**
      * Return paginated response
+     * Supports both raw models and resources
      */
-    protected function paginatedResponse(LengthAwarePaginator $paginator, ?string $message = null): JsonResponse
+    protected function paginatedResponse(LengthAwarePaginator $paginator, ?string $message = null, ?string $resourceClass = null): JsonResponse
     {
+        $items = $paginator->items();
+        
+        // Transform items using resource if provided
+        if ($resourceClass && class_exists($resourceClass)) {
+            $items = $resourceClass::collection($items);
+        }
+        
         $response = [
             'success' => true,
-            'data' => $paginator->items(),
+            'data' => $items,
             'meta' => [
                 'current_page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),

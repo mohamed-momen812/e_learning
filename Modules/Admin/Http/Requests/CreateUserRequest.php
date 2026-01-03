@@ -27,6 +27,7 @@ class CreateUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:8'],
             'roles' => ['sometimes', 'array'],
             'roles.*' => ['sometimes', 'string', Rule::exists('roles', 'name')->where('guard_name', 'web')],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif', 'max:2048'], // 2MB max, optional
         ];
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\InitializeTenancyByHeader;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -32,7 +32,7 @@ Route::middleware([
         Route::prefix('auth')->middleware(['auth:sanctum', 'admin'])->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::get('/me', [AuthController::class, 'me']);
-            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::post('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/change-password', [AuthController::class, 'changePassword']);
         });
     });
@@ -48,7 +48,7 @@ Route::middleware([
         Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::get('/me', [AuthController::class, 'me']);
-            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::post('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/change-password', [AuthController::class, 'changePassword']);
         });
     });

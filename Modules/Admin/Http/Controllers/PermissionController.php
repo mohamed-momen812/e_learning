@@ -3,6 +3,7 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Http\Resources\PermissionResource;
 use Modules\Admin\Services\PermissionService;
 use Modules\Admin\Services\ListPermissionService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
@@ -43,7 +44,7 @@ class PermissionController extends BaseApiController
 
         $paginator = $this->listService->handle($params);
 
-        return $this->paginatedResponse($paginator, 'data.retrieved');
+        return $this->paginatedResponse($paginator, 'data.retrieved', PermissionResource::class);
     }
 
     /**
@@ -54,7 +55,10 @@ class PermissionController extends BaseApiController
         $this->authorizePermissionAccess();
         $permission = $this->service->findOrFail($id);
 
-        return $this->successResponse($permission, 'data.retrieved');
+        return $this->successResponse(
+            new PermissionResource($permission), 
+            'data.retrieved'
+        );
     }
 
     /**

@@ -21,6 +21,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/storage
 
 # Cursor IDE files
 /.cursor

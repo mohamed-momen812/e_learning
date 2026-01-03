@@ -13,7 +13,7 @@ foreach (config('tenancy.central_domains') as $domain) {
                 Route::middleware(['auth:sanctum', 'super.admin'])->group(function () {
                     Route::post('/logout', [AuthController::class, 'logout']);
                     Route::get('/me', [AuthController::class, 'me']);
-                    Route::put('/profile', [AuthController::class, 'updateProfile']);
+                    Route::post('/profile', [AuthController::class, 'updateProfile']);
                     Route::post('/change-password', [AuthController::class, 'changePassword']);
                 });
             });
@@ -28,7 +28,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         Route::prefix('auth')->middleware('auth:sanctum')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::get('/me', [AuthController::class, 'me']);
-            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::post('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/change-password', [AuthController::class, 'changePassword']);
         });
     });

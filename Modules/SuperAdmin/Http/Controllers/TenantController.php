@@ -3,6 +3,7 @@
 namespace Modules\SuperAdmin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
 use Modules\SuperAdmin\Http\Requests\CreateTenantRequest;
 use Modules\SuperAdmin\Http\Requests\IndexTenantRequest;
@@ -43,7 +44,7 @@ class TenantController extends BaseApiController
 
         $paginator = $this->listService->handle($params);
 
-        return $this->paginatedResponse($paginator, 'data.retrieved');
+        return $this->paginatedResponse($paginator, 'data.retrieved', TenantResource::class);
     }
 
     /**
@@ -55,7 +56,10 @@ class TenantController extends BaseApiController
 
         $tenant = $this->service->create($request->validated());
 
-        return $this->createdResponse($tenant, 'tenant.created');
+        return $this->createdResponse(
+            new TenantResource($tenant->load('domains')), 
+            'tenant.created'
+        );
     }
 
     /**
@@ -66,7 +70,10 @@ class TenantController extends BaseApiController
         $tenant = $this->service->findOrFail($id);
         $this->authorize('view', $tenant);
 
-        return $this->successResponse($tenant, 'data.retrieved');
+        return $this->successResponse(
+            new TenantResource($tenant->load('domains')), 
+            'data.retrieved'
+        );
     }
 
     /**
@@ -79,7 +86,10 @@ class TenantController extends BaseApiController
 
         $tenant = $this->service->update($id, $request->validated());
 
-        return $this->successResponse($tenant, 'tenant.updated');
+        return $this->successResponse(
+            new TenantResource($tenant->load('domains')), 
+            'tenant.updated'
+        );
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Http\Resources\RoleResource;
 use Modules\Admin\Http\Requests\CreateRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Http\Requests\IndexRoleRequest;
@@ -47,7 +48,7 @@ class RoleController extends BaseApiController
 
         $paginator = $this->listService->handle($params);
 
-        return $this->paginatedResponse($paginator, 'data.retrieved');
+        return $this->paginatedResponse($paginator, 'data.retrieved', RoleResource::class);
     }
 
     /**
@@ -61,7 +62,10 @@ class RoleController extends BaseApiController
             $request->validated('permissions', [])
         );
 
-        return $this->createdResponse($role, 'role.created');
+        return $this->createdResponse(
+            new RoleResource($role->load('permissions')), 
+            'role.created'
+        );
     }
 
     /**
@@ -72,7 +76,10 @@ class RoleController extends BaseApiController
         $this->authorizeRoleAccess();
         $role = $this->service->findOrFail($id);
 
-        return $this->successResponse($role, 'data.retrieved');
+        return $this->successResponse(
+            new RoleResource($role->load('permissions')), 
+            'data.retrieved'
+        );
     }
 
     /**
@@ -87,7 +94,10 @@ class RoleController extends BaseApiController
             $request->validated('permissions', [])
         );
 
-        return $this->successResponse($role, 'role.updated');
+        return $this->successResponse(
+            new RoleResource($role->load('permissions')), 
+            'role.updated'
+        );
     }
 
     /**

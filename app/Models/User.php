@@ -38,6 +38,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $guard_name = 'web';
+
     /**
      * Get the attributes that should be cast.
      *
@@ -60,5 +62,19 @@ class User extends Authenticatable
         return $this->is_super_admin === true;
     }
 
-    protected $guard_name = 'web';
+    /**
+     * Get all images for the user.
+     */
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    /**
+     * Get the user's avatar image.
+     */
+    public function avatar()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('type', 'avatar');
+    }
 }

@@ -3,6 +3,7 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Modules\Admin\Http\Requests\CreateUserRequest;
 use Modules\Admin\Http\Requests\UpdateUserRequest;
@@ -29,7 +30,7 @@ class UserController extends BaseApiController
     public function index(IndexUserRequest $request): JsonResponse
     {
         $this->authorize('viewAny', User::class);
-        $defaultWith = ['roles'];
+        $defaultWith = ['roles', 'avatar'];
         $defaultFilters = [];
         $defaultSearch = '';
         $defaultSort = 'display_order';
@@ -47,7 +48,7 @@ class UserController extends BaseApiController
 
         $paginator = $this->listService->handle($params);
 
-        return $this->paginatedResponse($paginator, 'data.retrieved');
+        return $this->paginatedResponse($paginator, 'data.retrieved', UserResource::class);
     }
 
     /**
@@ -56,9 +57,19 @@ class UserController extends BaseApiController
     public function store(CreateUserRequest $request): JsonResponse
     {
         $this->authorize('create', User::class);
-        $user = $this->service->create($request->validated());
 
-        return $this->createdResponse($user, 'user.created');
+        $data = $request->validated();
+        $avatar = $request->file('avatar');
+
+        // Remove avatar from data array as it's handled separately
+        unset($data['avatar']);
+
+        $user = $this->service->create($data, $avatar);
+
+        return $this->createdResponse(
+            new UserResource($user->load(['avatar', 'roles'])),
+            'user.created'
+        );
     }
 
     /**
@@ -69,7 +80,10 @@ class UserController extends BaseApiController
         $user = $this->service->findOrFail($id);
         $this->authorize('view', $user);
 
-        return $this->successResponse($user, 'data.retrieved');
+        return $this->successResponse(
+            new UserResource($user->load(['avatar', 'roles'])),
+            'data.retrieved'
+        );
     }
 
     /**
@@ -79,9 +93,19 @@ class UserController extends BaseApiController
     {
         $user = $this->service->findOrFail($id);
         $this->authorize('update', $user);
-        $user = $this->service->update($id, $request->validated());
 
-        return $this->successResponse($user, 'user.updated');
+        $data = $request->validated();
+        $avatar = $request->file('avatar');
+
+        // Remove avatar from data array as it's handled separately
+        unset($data['avatar']);
+
+        $user = $this->service->update($id, $data, $avatar);
+
+        return $this->successResponse(
+            new UserResource($user->load(['avatar', 'roles'])),
+            'user.updated'
+        );
     }
 
     /**

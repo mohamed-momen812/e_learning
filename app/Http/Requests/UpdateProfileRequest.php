@@ -32,6 +32,7 @@ class UpdateProfileRequest extends FormRequest
                 Rule::unique('users')->ignore($user?->id),
             ],
             'phone' => ['sometimes', 'nullable', 'string', 'max:20'],
+            'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,gif', 'max:2048'], // 2MB max
         ];
     }
 }
