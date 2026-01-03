@@ -53,7 +53,7 @@ class Image extends Model
     public function getUrlAttribute(): string
     {
         if (!tenancy()->initialized) {
-            return asset($this->path);
+            return asset(Storage::disk('public')->url($this->path));
         }
         return tenant_asset($this->path) . '?tenant=' . tenant('id');
     }
