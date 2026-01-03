@@ -20,7 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
     // Sanctum API authentication
-    $middleware->statefulApi();
+    // $middleware->statefulApi();
+    // $middleware->validateCsrfTokens(except: [
+    //     'api/*',                // Exclude all routes starting with api/
+    //     // 'stripe/webhook',       // Exclude a specific URI
+    //     // 'http://example.com/foo/*', // Exclude by full URL
+    // ]);
 
     // Set locale based on Accept-Language header
     $middleware->append(SetLocale::class);
