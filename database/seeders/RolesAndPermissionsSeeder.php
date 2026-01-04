@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Permission;
+use App\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -20,53 +20,54 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         $registrar->forgetCachedPermissions();
 
-        // Create permissions
+        // Create permissions with labels
         $permissions = [
             // Course permissions
-            'courses.create',
-            'courses.view',
-            'courses.update',
-            'courses.delete',
-            'courses.publish',
-            
+            'courses.create' => ['en' => 'Create Courses', 'ar' => 'إنشاء الدورات'],
+            'courses.view' => ['en' => 'View Courses', 'ar' => 'عرض الدورات'],
+            'courses.update' => ['en' => 'Update Courses', 'ar' => 'تحديث الدورات'],
+            'courses.delete' => ['en' => 'Delete Courses', 'ar' => 'حذف الدورات'],
+            'courses.publish' => ['en' => 'Publish Courses', 'ar' => 'نشر الدورات'],
+
             // Lesson permissions
-            'lessons.create',
-            'lessons.view',
-            'lessons.update',
-            'lessons.delete',
-            
+            'lessons.create' => ['en' => 'Create Lessons', 'ar' => 'إنشاء الدروس'],
+            'lessons.view' => ['en' => 'View Lessons', 'ar' => 'عرض الدروس'],
+            'lessons.update' => ['en' => 'Update Lessons', 'ar' => 'تحديث الدروس'],
+            'lessons.delete' => ['en' => 'Delete Lessons', 'ar' => 'حذف الدروس'],
+
             // Student permissions
-            'students.create',
-            'students.view',
-            'students.update',
-            'students.delete',
-            
+            'students.create' => ['en' => 'Create Students', 'ar' => 'إنشاء الطلاب'],
+            'students.view' => ['en' => 'View Students', 'ar' => 'عرض الطلاب'],
+            'students.update' => ['en' => 'Update Students', 'ar' => 'تحديث الطلاب'],
+            'students.delete' => ['en' => 'Delete Students', 'ar' => 'حذف الطلاب'],
+
             // Enrollment permissions
-            'enrollments.create',
-            'enrollments.view',
-            'enrollments.update',
-            'enrollments.delete',
-            
+            'enrollments.create' => ['en' => 'Create Enrollments', 'ar' => 'إنشاء التسجيلات'],
+            'enrollments.view' => ['en' => 'View Enrollments', 'ar' => 'عرض التسجيلات'],
+            'enrollments.update' => ['en' => 'Update Enrollments', 'ar' => 'تحديث التسجيلات'],
+            'enrollments.delete' => ['en' => 'Delete Enrollments', 'ar' => 'حذف التسجيلات'],
+
             // Exam permissions
-            'exams.create',
-            'exams.view',
-            'exams.update',
-            'exams.delete',
-            'exams.take',
-            'exams.grade',
-            
+            'exams.create' => ['en' => 'Create Exams', 'ar' => 'إنشاء الامتحانات'],
+            'exams.view' => ['en' => 'View Exams', 'ar' => 'عرض الامتحانات'],
+            'exams.update' => ['en' => 'Update Exams', 'ar' => 'تحديث الامتحانات'],
+            'exams.delete' => ['en' => 'Delete Exams', 'ar' => 'حذف الامتحانات'],
+            'exams.take' => ['en' => 'Take Exams', 'ar' => 'أداء الامتحانات'],
+            'exams.grade' => ['en' => 'Grade Exams', 'ar' => 'تصحيح الامتحانات'],
+
             // Attendance permissions
-            'attendance.view',
-            'attendance.mark',
-            
+            'attendance.view' => ['en' => 'View Attendance', 'ar' => 'عرض الحضور'],
+            'attendance.mark' => ['en' => 'Mark Attendance', 'ar' => 'تسجيل الحضور'],
+
             // Reports permissions
-            'reports.view',
-            'reports.generate',
+            'reports.view' => ['en' => 'View Reports', 'ar' => 'عرض التقارير'],
+            'reports.generate' => ['en' => 'Generate Reports', 'ar' => 'إنشاء التقارير'],
         ];
 
-        foreach ($permissions as $permission) {
+        foreach ($permissions as $permissionName => $label) {
             Permission::create([
-                'name' => $permission,
+                'name' => $permissionName,
+                'label' => $label,
                 'guard_name' => 'web'
             ]);
         }
@@ -74,6 +75,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create roles and assign permissions
         $teacher = Role::create([
             'name' => 'teacher',
+            'label' => ['en' => 'Teacher', 'ar' => 'معلم'],
             'guard_name' => 'web'
         ]);
         $teacher->givePermissionTo([
@@ -103,6 +105,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $assistant = Role::create([
             'name' => 'assistant',
+            'label' => ['en' => 'Assistant', 'ar' => 'مساعد'],
             'guard_name' => 'web'
         ]);
         $assistant->givePermissionTo([
@@ -118,6 +121,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $student = Role::create([
             'name' => 'student',
+            'label' => ['en' => 'Student', 'ar' => 'طالب'],
             'guard_name' => 'web'
         ]);
         $student->givePermissionTo([
@@ -130,6 +134,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $guardian = Role::create([
             'name' => 'guardian',
+            'label' => ['en' => 'Guardian', 'ar' => 'ولي أمر'],
             'guard_name' => 'web'
         ]);
         $guardian->givePermissionTo([
