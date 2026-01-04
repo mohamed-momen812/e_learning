@@ -62,7 +62,7 @@ class SelectOptionsService
                 ->map(function ($role) {
                     return [
                         'id' => $role->id,
-                        'name' => $role->name,
+                    'key' => $role->name,
                         'label' => $role->label, // Translated label
                     ];
                 })
@@ -85,7 +85,7 @@ class SelectOptionsService
                 ->map(function ($permission) {
                     return [
                         'id' => $permission->id,
-                        'name' => $permission->name,
+                    'key' => $permission->name,
                         'label' => $permission->label ?? $permission->name,
                     ];
                 })
@@ -111,8 +111,8 @@ class SelectOptionsService
                 ->map(function ($user) {
                     return [
                         'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
+                    'key' => $user->id,
+                    'label' => $user->name,
                     ];
                 })
                 ->toArray();

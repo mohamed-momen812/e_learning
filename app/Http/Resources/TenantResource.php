@@ -16,7 +16,7 @@ class TenantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->getTranslations('name'), // Returns: {'en': 'Name', 'ar': 'الاسم'}
             'email' => $this->email,
             'phone' => $this->phone,
             'is_active' => $this->is_active,
@@ -27,7 +27,7 @@ class TenantResource extends JsonResource
                 return $this->domains->map(function ($domain) {
                     return [
                         'id' => $domain->id,
-                        'domain' => $domain->domain,
+                        'label' => $domain->domain,
                     ];
                 });
             }),

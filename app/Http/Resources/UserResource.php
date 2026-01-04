@@ -32,8 +32,7 @@ class UserResource extends JsonResource
                 return $this->roles->map(function ($role) {
                     return [
                         'id' => $role->id,
-                        'name' => $role->name,
-                        'guard_name' => $role->guard_name,
+                        'label' => $role->label,
                     ];
                 });
             }),
