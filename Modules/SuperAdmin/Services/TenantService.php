@@ -21,14 +21,19 @@ class TenantService
             $tenant = Tenant::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'phone' => $data['phone'],
+                'phone' => $data['phone'] ?? null,
+                'is_active' => $data['is_active'] ?? 1,
                 'password' => Hash::make($data['password']),
                 'display_order' => $maxOrder + 1,
             ]);
 
-            $tenant->domains()->create([
-                'domain' => $data['domain'],
-            ]);
+            // Create multiple domains
+            $domains = $data['domains'] ?? [];
+            foreach ($domains as $domain) {
+                $tenant->domains()->create([
+                    'domain' => $domain,
+                ]);
+            }
 
             // The TenantCreated event will automatically:
             // 1. Create the tenant database
@@ -47,16 +52,47 @@ class TenantService
         return DB::connection('central')->transaction(function () use ($id, $data) {
             $tenant = Tenant::findOrFail($id);
 
+            // Update tenant basic info
+            $updateData = [];
             if (isset($data['name'])) {
-                $tenant->update(['name' => $data['name']]);
+                $updateData['name'] = $data['name'];
+            }
+            if (isset($data['email'])) {
+                $updateData['email'] = $data['email'];
+            }
+            if (isset($data['phone'])) {
+                $updateData['phone'] = $data['phone'];
+            }
+            if (isset($data['password'])) {
+                $updateData['password'] = Hash::make($data['password']);
+            }
+            if (isset($data['is_active'])) {
+                $updateData['is_active'] = $data['is_active'];
             }
 
-            if (isset($data['domain'])) {
-                $domain = $tenant->domains->first();
-                if ($domain) {
-                    $domain->update(['domain' => $data['domain']]);
-                } else {
-                    $tenant->domains()->create(['domain' => $data['domain']]);
+            if (!empty($updateData)) {
+                $tenant->update($updateData);
+            }
+
+            // Handle domains update
+            if (isset($data['domains'])) {
+                $newDomains = $data['domains'];
+                $existingDomains = $tenant->domains->pluck('domain')->toArray();
+
+                // Get domains to delete (existing but not in new list)
+                $domainsToDelete = array_diff($existingDomains, $newDomains);
+
+                // Get domains to add (new but not in existing list)
+                $domainsToAdd = array_diff($newDomains, $existingDomains);
+
+                // Delete removed domains
+                if (!empty($domainsToDelete)) {
+                    $tenant->domains()->whereIn('domain', $domainsToDelete)->delete();
+                }
+
+                // Add new domains
+                foreach ($domainsToAdd as $domain) {
+                    $tenant->domains()->create(['domain' => $domain]);
                 }
             }
 
