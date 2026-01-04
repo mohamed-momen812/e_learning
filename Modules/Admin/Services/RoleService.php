@@ -2,7 +2,7 @@
 
 namespace Modules\Admin\Services;
 
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 
 class RoleService
@@ -10,16 +10,22 @@ class RoleService
     /**
      * Create a role with explicit guard
      */
-    public function createRole(string $name, array $permissions = []): Model
+    public function createRole(string $name, array $permissions = [], ?array $label = null): Model
     {
         // Get the next display_order value
         $maxOrder = Role::where('guard_name', 'web')->max('display_order') ?? 0;
         
-        $role = Role::create([
+        $data = [
             'name' => $name,
             'guard_name' => 'web', // Always use 'web' guard
             'display_order' => $maxOrder + 1,
-        ]);
+        ];
+
+        if ($label !== null) {
+            $data['label'] = $label;
+        }
+
+        $role = Role::create($data);
 
         if (!empty($permissions)) {
             $role->givePermissionTo($permissions);
@@ -31,12 +37,20 @@ class RoleService
     /**
      * Update role
      */
-    public function updateRole(string $id, ?string $name = null, array $permissions = []): Model
+    public function updateRole(string $id, ?string $name = null, array $permissions = [], ?array $label = null): Model
     {
         $role = Role::findOrFail($id);
 
+        $data = [];
         if ($name !== null) {
-            $role->update(['name' => $name]);
+            $data['name'] = $name;
+        }
+        if ($label !== null) {
+            $data['label'] = $label;
+        }
+
+        if (!empty($data)) {
+            $role->update($data);
         }
 
         // Sync permissions if provided

@@ -59,7 +59,8 @@ class RoleController extends BaseApiController
         $this->authorizeRoleAccess();
         $role = $this->service->createRole(
             $request->validated('name'),
-            $request->validated('permissions', [])
+            $request->validated('permissions', []),
+            $request->validated('label')
         );
 
         return $this->createdResponse(
@@ -91,7 +92,8 @@ class RoleController extends BaseApiController
         $role = $this->service->updateRole(
             $id,
             $request->validated('name'),
-            $request->validated('permissions', [])
+            $request->validated('permissions', []),
+            $request->validated('label')
         );
 
         return $this->successResponse(

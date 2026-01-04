@@ -6,10 +6,18 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Spatie\Translatable\HasTranslations;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase, HasDomains, HasTranslations;
+
+    /**
+     * Translatable attributes
+     */
+    public $translatable = [
+        'name',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +34,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     protected $casts = [
         'data' => 'array',
+        'name' => 'array',
     ];
 
     /**

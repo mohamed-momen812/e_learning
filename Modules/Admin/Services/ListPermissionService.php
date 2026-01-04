@@ -2,7 +2,7 @@
 
 namespace Modules\Admin\Services;
 
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use App\Core\Traits\HasDynamicOrdering;
 use Illuminate\Pagination\LengthAwarePaginator;
 

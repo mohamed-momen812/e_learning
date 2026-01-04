@@ -19,7 +19,7 @@ class CreateTenantsTable extends Migration
             $table->id();
             $table->integer('display_order')->default(0);
 
-            $table->string('name');
+            $table->json('name');
             $table->string('email')->unique()->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('password')->nullable();

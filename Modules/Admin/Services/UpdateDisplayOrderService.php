@@ -3,8 +3,8 @@
 namespace Modules\Admin\Services;
 
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 
 class UpdateDisplayOrderService

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('disk')->default('public');
             $table->string('type')->nullable(); // e.g., 'avatar', 'profile', 'cover'
             $table->integer('order')->default(0);
-            $table->string('alt')->nullable();
+            $table->json('alt')->nullable();
             $table->integer('size')->nullable(); // in bytes
             $table->string('mime_type')->nullable();
             $table->timestamps();

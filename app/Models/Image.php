@@ -6,10 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 
 class Image extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    /**
+     * Translatable attributes
+     */
+    public $translatable = [
+        'alt',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +44,7 @@ class Image extends Model
         return [
             'order' => 'integer',
             'size' => 'integer',
+            'alt' => 'array',
         ];
     }
 

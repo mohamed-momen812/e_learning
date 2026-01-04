@@ -16,7 +16,8 @@ class PermissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->name, // System identifier - never translated
+            'label' => $this->label, // UI display - translated
             'guard_name' => $this->guard_name,
             
             // Timestamps

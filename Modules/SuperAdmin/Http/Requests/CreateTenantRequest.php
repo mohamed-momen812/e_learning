@@ -21,7 +21,9 @@ class CreateTenantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'array'],
+            'name.en' => ['required', 'string', 'max:255'],
+            'name.ar' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255', 'unique:domains,domain'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],

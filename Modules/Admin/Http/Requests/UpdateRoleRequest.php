@@ -24,6 +24,9 @@ class UpdateRoleRequest extends FormRequest
 
         return [
             'name' => ['sometimes', 'string', 'max:255', Rule::unique('roles')->where('guard_name', 'web')->ignore($roleId)],
+            'label' => ['nullable', 'array'],
+            'label.en' => ['nullable', 'string', 'max:255'],
+            'label.ar' => ['nullable', 'string', 'max:255'],
             'permissions' => ['sometimes', 'array'],
             'permissions.*' => ['sometimes', 'string', Rule::exists('permissions', 'name')->where('guard_name', 'web')],
         ];

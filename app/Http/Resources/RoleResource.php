@@ -17,6 +17,7 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'label' => $this->label, // UI display - translated
             'guard_name' => $this->guard_name,
             
             // Relationships
@@ -25,6 +26,7 @@ class RoleResource extends JsonResource
                     return [
                         'id' => $permission->id,
                         'name' => $permission->name,
+                        'label' => $permission->label, // UI display - translated
                         'guard_name' => $permission->guard_name,
                     ];
                 });

@@ -132,6 +132,7 @@ class ImageService
 
     /**
      * Generate alt text for the image
+     * Returns string - package will store in current locale automatically
      *
      * @param Model $model
      * @param string $type
