@@ -2,9 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SelectOptionsController;
 
 foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
+        // Public helper routes for select options
+        Route::prefix('helpers')->group(function () {
+            Route::get('/select-options', [SelectOptionsController::class, 'index']);
+            Route::get('/select-options/roles', [SelectOptionsController::class, 'roles']);
+            Route::get('/select-options/permissions', [SelectOptionsController::class, 'permissions']);
+            Route::get('/select-options/users', [SelectOptionsController::class, 'users']);
+        });
+
         // Super Admin routes
         Route::prefix('super-admin')->group(function () {
             Route::prefix('auth')->group(function () {

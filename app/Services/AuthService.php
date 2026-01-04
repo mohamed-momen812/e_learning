@@ -116,11 +116,13 @@ class AuthService
      */
     public function register(array $data, ?UploadedFile $avatar = null): array
     {
+        $maxOrder = User::max('display_order') ?? 0;
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
+            'display_order' => $maxOrder + 1,
         ]);
 
         if ($avatar && $avatar->isValid()) {

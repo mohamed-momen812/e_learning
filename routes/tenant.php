@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SelectOptionsController;
 use App\Http\Middleware\InitializeTenancyByHeader;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
@@ -23,6 +24,14 @@ Route::middleware([
     'api',
     InitializeTenancyByHeader::class,
 ])->prefix('api')->group(function () {
+    // Public helper routes for select options
+    Route::prefix('helpers/tenant')->group(function () {
+        Route::get('/select-options', [SelectOptionsController::class, 'index']);
+        Route::get('/select-options/roles', [SelectOptionsController::class, 'roles']);
+        Route::get('/select-options/permissions', [SelectOptionsController::class, 'permissions']);
+        Route::get('/select-options/users', [SelectOptionsController::class, 'users']);
+    });
+
     // Admin routes - for teacher and assistant dashboard
     Route::prefix('admin')->group(function () {
         Route::prefix('auth')->group(function () {
