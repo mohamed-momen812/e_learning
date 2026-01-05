@@ -12,7 +12,7 @@ class BulkDeleteTenantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('bulkDelete', Tenant::class) ?? false;
+        return $this->user()?->can('tenants.bulk_delete') ?? false;
     }
 
     /**

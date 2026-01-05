@@ -11,7 +11,7 @@ class UpdatePermissionDisplayOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->hasRole('teacher') ?? false;
+        return $this->user()?->can('permissions.update_order') ?? false;
     }
 
     /**

@@ -11,7 +11,7 @@ class IndexPermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->hasRole('teacher') ?? false;
+        return $this->user()?->can('permissions.view') ?? false;
     }
 
     /**

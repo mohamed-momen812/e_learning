@@ -11,7 +11,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['teacher', 'assistant']);
+        return $user->can('users.view');
     }
 
     /**
@@ -24,8 +24,8 @@ class UserPolicy
             return true;
         }
 
-        // Teachers and assistants can view any user
-        return $user->hasRole(['teacher', 'assistant']);
+        // Check permission for viewing other users
+        return $user->can('users.view');
     }
 
     /**
@@ -33,7 +33,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['teacher', 'assistant']);
+        return $user->can('users.create');
     }
 
     /**
@@ -46,8 +46,8 @@ class UserPolicy
             return true;
         }
 
-        // Teachers can update any user
-        return $user->hasRole('teacher');
+        // Check permission for updating other users
+        return $user->can('users.update');
     }
 
     /**
@@ -60,15 +60,16 @@ class UserPolicy
             return false;
         }
 
-        // Only teachers can delete users
-        return $user->hasRole('teacher');
+        // Check permission for deleting users
+        return $user->can('users.delete');
     }
+
     /**
      * Determine if the user can bulk delete users.
      */
     public function bulkDelete(User $user): bool
     {
-        return $user->hasRole('teacher');
+        return $user->can('users.bulk_delete');
     }
 
     /**
@@ -76,8 +77,7 @@ class UserPolicy
      */
     public function updateOrder(User $user): bool
     {
-        // Only teachers can update display order (affects multiple users)
-        return $user->hasRole('teacher');
+        return $user->can('users.update_order');
     }
 }
 

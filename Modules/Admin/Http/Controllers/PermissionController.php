@@ -4,13 +4,13 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\PermissionResource;
+use App\Models\Permission;
 use Modules\Admin\Services\PermissionService;
 use Modules\Admin\Services\ListPermissionService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
 use Modules\Admin\Http\Requests\IndexPermissionRequest;
 use Modules\Admin\Http\Requests\UpdatePermissionDisplayOrderRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends BaseApiController
 {
@@ -27,7 +27,7 @@ class PermissionController extends BaseApiController
      */
     public function index(IndexPermissionRequest $request): JsonResponse
     {
-        $this->authorizePermissionAccess();
+        $this->authorize('viewAny', Permission::class);
         $defaultFilters = [];
         $defaultSearch = '';
         $defaultSort = 'display_order';
@@ -52,8 +52,8 @@ class PermissionController extends BaseApiController
      */
     public function show(string $id): JsonResponse
     {
-        $this->authorizePermissionAccess();
         $permission = $this->service->findOrFail($id);
+        $this->authorize('view', $permission);
 
         return $this->successResponse(
             new PermissionResource($permission), 
@@ -66,7 +66,7 @@ class PermissionController extends BaseApiController
      */
     public function updateOrder(UpdatePermissionDisplayOrderRequest $request): JsonResponse
     {
-        $this->authorizePermissionAccess();
+        $this->authorize('updateOrder', Permission::class);
         
         if ($request->has('ids')) {
             $this->orderService->reorderPermissionsByIds($request->validated('ids'));
@@ -75,16 +75,6 @@ class PermissionController extends BaseApiController
         }
         
         return $this->successResponse(null, 'permission.order_updated');
-    }
-
-    /**
-     * Authorize permission access - only teachers can view permissions
-     */
-    protected function authorizePermissionAccess(): void
-    {
-        if (!Auth::user()?->hasRole('teacher')) {
-            abort(403, 'Only teachers can view permissions');
-        }
     }
 }
 

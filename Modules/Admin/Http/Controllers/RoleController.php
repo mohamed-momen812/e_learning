@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\RoleResource;
+use App\Models\Role;
 use Modules\Admin\Http\Requests\CreateRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Http\Requests\IndexRoleRequest;
@@ -13,7 +14,6 @@ use Modules\Admin\Services\RoleService;
 use Modules\Admin\Services\ListRoleService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class RoleController extends BaseApiController
 {
@@ -30,7 +30,7 @@ class RoleController extends BaseApiController
      */
     public function index(IndexRoleRequest $request): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $this->authorize('viewAny', Role::class);
         $defaultWith = ['permissions'];
         $defaultFilters = [];
         $defaultSearch = '';
@@ -57,7 +57,7 @@ class RoleController extends BaseApiController
      */
     public function store(CreateRoleRequest $request): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $this->authorize('create', Role::class);
         $role = $this->service->createRole(
             $request->validated('name'),
             $request->validated('permissions', []),
@@ -75,8 +75,8 @@ class RoleController extends BaseApiController
      */
     public function show(string $id): JsonResponse
     {
-        $this->authorizeRoleAccess();
         $role = $this->service->findOrFail($id);
+        $this->authorize('view', $role);
 
         return $this->successResponse(
             new RoleResource($role->load('permissions')),
@@ -89,7 +89,8 @@ class RoleController extends BaseApiController
      */
     public function update(UpdateRoleRequest $request, string $id): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $role = $this->service->findOrFail($id);
+        $this->authorize('update', $role);
         $role = $this->service->updateRole(
             $id,
             $request->validated('name'),
@@ -108,7 +109,8 @@ class RoleController extends BaseApiController
      */
     public function destroy(string $id): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $role = $this->service->findOrFail($id);
+        $this->authorize('delete', $role);
         $this->service->deleteRole($id);
 
         return $this->noContentResponse();
@@ -119,7 +121,7 @@ class RoleController extends BaseApiController
      */
     public function bulkDestroy(BulkDeleteRoleRequest $request): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $this->authorize('bulkDelete', Role::class);
 
         $result = $this->service->bulkDeleteRoles($request->validated('ids'));
 
@@ -136,7 +138,7 @@ class RoleController extends BaseApiController
      */
     public function updateOrder(UpdateRoleDisplayOrderRequest $request): JsonResponse
     {
-        $this->authorizeRoleAccess();
+        $this->authorize('updateOrder', Role::class);
 
         if ($request->has('ids')) {
             $this->orderService->reorderRolesByIds($request->validated('ids'));
@@ -145,15 +147,5 @@ class RoleController extends BaseApiController
         }
 
         return $this->successResponse(null, 'role.order_updated');
-    }
-
-    /**
-     * Authorize role access - only teachers can manage roles
-     */
-    protected function authorizeRoleAccess(): void
-    {
-        if (!Auth::user()?->hasRole('teacher')) {
-            abort(403, __('role.only_teachers_can_manage_roles'));
-        }
     }
 }

@@ -12,7 +12,7 @@ class CreateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->hasAnyRole(['teacher', 'assistant']) ?? false;
+        return $this->user()?->can('users.create') ?? false;
     }
 
     /**

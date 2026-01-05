@@ -12,7 +12,7 @@ class TenantPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.view');
     }
 
     /**
@@ -20,7 +20,7 @@ class TenantPolicy
      */
     public function view(User $user, Tenant $tenant): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.view');
     }
 
     /**
@@ -28,7 +28,7 @@ class TenantPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.create');
     }
 
     /**
@@ -36,7 +36,7 @@ class TenantPolicy
      */
     public function update(User $user, Tenant $tenant): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.update');
     }
 
     /**
@@ -44,7 +44,7 @@ class TenantPolicy
      */
     public function delete(User $user, Tenant $tenant): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.delete');
     }
 
     /**
@@ -52,6 +52,6 @@ class TenantPolicy
      */
     public function bulkDelete(User $user): bool
     {
-        return $user->isSuperAdmin();
+        return $user->can('tenants.bulk_delete');
     }
 }

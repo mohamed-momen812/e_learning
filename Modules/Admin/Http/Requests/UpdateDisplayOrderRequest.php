@@ -11,7 +11,7 @@ class UpdateDisplayOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->hasAnyRole(['teacher', 'assistant']) ?? false;
+        return $this->user()?->can('users.update_order') ?? false;
     }
 
     /**

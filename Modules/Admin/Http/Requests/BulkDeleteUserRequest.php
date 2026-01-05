@@ -12,7 +12,7 @@ class BulkDeleteUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('bulkDelete', User::class) ?? false;
+        return $this->user()?->can('users.bulk_delete') ?? false;
     }
 
     /**

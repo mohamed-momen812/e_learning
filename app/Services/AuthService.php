@@ -55,8 +55,8 @@ class AuthService
             );
         }
 
-        // Only allow teacher or assistant users
-        if (!$user->hasAnyRole(['teacher', 'assistant'])) {
+        // Only allow users with admin permissions (users.create or users.view)
+        if (!$user->can('users.create') && !$user->can('users.view')) {
             throw new BusinessException(
                 'auth.unauthorized_admin_access',
                 ['email' => ['auth.unauthorized_admin_access']],

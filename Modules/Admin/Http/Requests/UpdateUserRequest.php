@@ -12,12 +12,9 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Users can update themselves, or teachers can update anyone
-        $targetUserId = $this->route('id') ?? $this->route('user');
-        if ($targetUserId && $this->user()?->id == $targetUserId) {
-            return true;
-        }
-        return $this->user()?->hasRole('teacher') ?? false;
+        // Authorization is handled in the controller via UserPolicy
+        // which checks ownership and permissions
+        return true;
     }
 
     /**
