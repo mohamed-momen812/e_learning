@@ -36,7 +36,7 @@ class DirectPermissionService
                 if ($user->hasPermissionTo($permissionName)) {
                     throw new BusinessException(
                         "permissions.user_already_has_permission",
-                        [],
+                        ['permission' => $permissionName],
                         409
                     );
                 }
@@ -73,7 +73,7 @@ class DirectPermissionService
                 if (!$user->hasPermissionTo($permissionName)) {
                     throw new BusinessException(
                         "permissions.user_does_not_have_permission",
-                        [],
+                        ['permission' => $permissionName],
                         409
                     );
                 }
@@ -137,7 +137,7 @@ class DirectPermissionService
             if (!$permission) {
                 throw new BusinessException(
                     "permissions.permission_not_found",
-                    [],
+                    ['permission' => $permissionName],
                     404
                 );
             }

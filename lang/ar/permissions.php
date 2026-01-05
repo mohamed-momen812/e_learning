@@ -10,7 +10,5 @@ return [
     'revoked_successfully' => 'تم إلغاء صلاحية :permission بنجاح',
     'assigned_successfully' => 'تم تعيين صلاحية :permission بنجاح',
     'manage_permissions' => 'إدارة الصلاحيات',
-    'permissions' => 'الصلاحيات',
-    'permission' => 'الصلاحية',
 ];
 

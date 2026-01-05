@@ -31,7 +31,7 @@ class UserController extends BaseApiController
     public function index(IndexUserRequest $request): JsonResponse
     {
         $this->authorize('viewAny', User::class);
-        $defaultWith = ['roles', 'avatar'];
+        $defaultWith = ['roles', 'avatar', 'permissions'];
         $defaultFilters = [];
         $defaultSearch = '';
         $defaultSort = 'display_order';
@@ -68,7 +68,7 @@ class UserController extends BaseApiController
         $user = $this->service->create($data, $avatar);
 
         return $this->createdResponse(
-            new UserResource($user->load(['avatar', 'roles'])),
+            new UserResource($user->load(['avatar', 'roles', 'permissions'])),
             'user.created'
         );
     }
@@ -82,7 +82,7 @@ class UserController extends BaseApiController
         $this->authorize('view', $user);
 
         return $this->successResponse(
-            new UserResource($user->load(['avatar', 'roles'])),
+            new UserResource($user->load(['avatar', 'roles', 'permissions'])),
             'data.retrieved'
         );
     }
@@ -104,7 +104,7 @@ class UserController extends BaseApiController
         $user = $this->service->update($id, $data, $avatar);
 
         return $this->successResponse(
-            new UserResource($user->load(['avatar', 'roles'])),
+            new UserResource($user->load(['avatar', 'roles', 'permissions'])),
             'user.updated'
         );
     }

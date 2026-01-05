@@ -74,19 +74,53 @@ return Application::configure(basePath: dirname(__DIR__))
             }, $messageArray);
         }
 
+        // Translate message with attributes support
+        $message = $e->getMessage();
+        $translatedMessage = __($message);
+
+        // If translation key exists and has placeholders, try to extract attributes from errors
+        // This allows passing attributes like ['permission' => 'value'] for :permission placeholder
+        if ($translatedMessage !== $message && !empty($e->getErrors())) {
+            // Extract attributes from errors array (first level keys can be used as attributes)
+            $attributes = [];
+            foreach ($e->getErrors() as $key => $value) {
+                if (is_string($key) && !is_array($value)) {
+                    $attributes[$key] = $value;
+                }
+            }
+            if (!empty($attributes)) {
+                $translatedMessage = __($message, $attributes);
+            }
+        }
+
         return response()->json([
             'success' => false,
-            'message' => __($e->getMessage()),
+            'message' => $translatedMessage,
             'errors' => $translatedErrors,
         ], $e->getStatusCode());
     });
 
     // Handle Laravel validation exceptions
     $exceptions->render(function (ValidationException $e) {
+        // Get the errors and ensure they're properly formatted
+        $errors = $e->errors();
+        $translatedErrors = [];
+
+        foreach ($errors as $field => $messages) {
+            // Ensure messages is always an array
+            $messageArray = is_array($messages) ? $messages : [$messages];
+
+            $translatedErrors[$field] = array_map(function ($message) {
+                // Messages from Laravel validation are already translated with attributes replaced
+                // But we ensure they're properly formatted
+                return $message;
+            }, $messageArray);
+        }
+
         return response()->json([
             'success' => false,
             'message' => __('validation.failed'),
-            'errors' => $e->getErrors(),
+            'errors' => $translatedErrors,
         ], 422);
     });
     })->create();

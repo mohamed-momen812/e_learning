@@ -10,7 +10,4 @@ return [
     'revoked_successfully' => 'Permission :permission revoked successfully',
     'assigned_successfully' => 'Permission :permission assigned successfully',
     'manage_permissions' => 'Manage permissions',
-    'permissions' => 'permissions',
-    'permission' => 'permission',
 ];
-

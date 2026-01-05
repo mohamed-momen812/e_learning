@@ -40,7 +40,7 @@ class DirectPermissionController extends BaseApiController
 
         return $this->successResponse(
             DirectPermissionResource::collection($directPermissions),
-            'permission.assigned_successfully'
+            'permissions.assigned_successfully'
         );
     }
 
@@ -66,7 +66,7 @@ class DirectPermissionController extends BaseApiController
 
         return $this->successResponse(
             DirectPermissionResource::collection($directPermissions),
-            'permission.revoked_successfully'
+            'permissions.revoked_successfully'
         );
     }
 
@@ -82,7 +82,7 @@ class DirectPermissionController extends BaseApiController
 
         return $this->successResponse(
             DirectPermissionResource::collection($directPermissions),
-            'permission.retrieved_successfully'
+            'permissions.retrieved_successfully'
         );
     }
 }
