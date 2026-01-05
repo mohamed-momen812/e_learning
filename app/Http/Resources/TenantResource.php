@@ -21,7 +21,7 @@ class TenantResource extends JsonResource
             'phone' => $this->phone,
             'is_active' => $this->is_active,
             'display_order' => $this->when($this->display_order !== null, $this->display_order),
-            
+
             // Relationships
             'domains' => $this->whenLoaded('domains', function () {
                 return $this->domains->map(function ($domain) {
@@ -31,11 +31,10 @@ class TenantResource extends JsonResource
                     ];
                 });
             }),
-            
+
             // Timestamps
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }
-

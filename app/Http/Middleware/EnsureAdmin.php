@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Core\Exceptions\BusinessException;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Core\Exceptions\BusinessException;
 
 class EnsureAdmin
 {
@@ -18,7 +18,7 @@ class EnsureAdmin
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             throw new BusinessException(
                 'auth.unauthenticated',
                 [],
@@ -27,7 +27,7 @@ class EnsureAdmin
         }
 
         // Only allow teacher or assistant users
-        if (!$user->hasAnyRole(['teacher', 'assistant'])) {
+        if (! $user->hasAnyRole(['teacher', 'assistant'])) {
             throw new BusinessException(
                 'auth.unauthorized_admin_access',
                 [],

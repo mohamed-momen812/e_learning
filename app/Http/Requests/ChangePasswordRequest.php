@@ -17,6 +17,8 @@ class ChangePasswordRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @return array<string, array<int, string|\Illuminate\Validation\Rules\Password|null>>
      */
     public function rules(): array
     {
@@ -26,4 +28,3 @@ class ChangePasswordRequest extends FormRequest
         ];
     }
 }
-

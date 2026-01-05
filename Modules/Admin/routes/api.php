@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Admin\Http\Controllers\UserController;
-use Modules\Admin\Http\Controllers\RoleController;
-use Modules\Admin\Http\Controllers\PermissionController;
 use Modules\Admin\Http\Controllers\DirectPermissionController;
+use Modules\Admin\Http\Controllers\PermissionController;
+use Modules\Admin\Http\Controllers\RoleController;
+use Modules\Admin\Http\Controllers\UserController;
 
 // Routes are loaded via RouteServiceProvider with:
 // - Tenant middleware (InitializeTenancyByHeader)

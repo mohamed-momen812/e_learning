@@ -10,4 +10,3 @@ return [
     'cannot_delete_admin_user' => 'Admin user cannot be deleted',
     'cannot_find_admin_user' => 'Admin user cannot be found',
 ];
-

@@ -13,4 +13,3 @@ class ValidationException extends BaseException
         parent::__construct($message, $errors, 422);
     }
 }
-

@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class CreateTeacherUserSeeder extends Seeder
@@ -20,14 +18,14 @@ class CreateTeacherUserSeeder extends Seeder
         // Get current tenant
         $tenant = tenant();
 
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
         // Get teacher_user data from tenant's data field in central database
         $tenantFromCentral = Tenant::on('central')->find($tenant->id);
 
-        if (!$tenantFromCentral) {
+        if (! $tenantFromCentral) {
             return;
         }
 

@@ -5,15 +5,15 @@ namespace Modules\Admin\Http\Controllers;
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Modules\Admin\Http\Requests\BulkDeleteUserRequest;
 use Modules\Admin\Http\Requests\CreateUserRequest;
-use Modules\Admin\Http\Requests\UpdateUserRequest;
 use Modules\Admin\Http\Requests\IndexUserRequest;
 use Modules\Admin\Http\Requests\UpdateDisplayOrderRequest;
-use Modules\Admin\Http\Requests\BulkDeleteUserRequest;
-use Modules\Admin\Services\UserService;
+use Modules\Admin\Http\Requests\UpdateUserRequest;
 use Modules\Admin\Services\ListUserService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
-use Illuminate\Http\JsonResponse;
+use Modules\Admin\Services\UserService;
 
 class UserController extends BaseApiController
 {
@@ -144,7 +144,7 @@ class UserController extends BaseApiController
     public function updateOrder(UpdateDisplayOrderRequest $request): JsonResponse
     {
         $this->authorize('updateOrder', User::class);
-        
+
         // If ids array is provided, use simpler reorder method
         if ($request->has('ids')) {
             $this->orderService->reorderUsersByIds($request->validated('ids'));
@@ -152,7 +152,7 @@ class UserController extends BaseApiController
             // Otherwise use explicit orders array
             $this->orderService->updateUserOrder($request->validated('orders'));
         }
-        
+
         return $this->successResponse(null, 'user.order_updated');
     }
 }

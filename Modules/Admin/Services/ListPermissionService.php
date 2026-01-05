@@ -2,13 +2,14 @@
 
 namespace Modules\Admin\Services;
 
-use App\Models\Permission;
 use App\Core\Traits\HasDynamicOrdering;
+use App\Models\Permission;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListPermissionService
 {
     use HasDynamicOrdering;
+
     /**
      * Handle list request
      */
@@ -24,12 +25,12 @@ class ListPermissionService
 
         // Filter by name
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
         // Search
-        if (!empty($search)) {
-            $query->where('name', 'like', '%' . $search . '%');
+        if (! empty($search)) {
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         // Apply dynamic ordering
@@ -39,4 +40,3 @@ class ListPermissionService
         return $query->paginate($per_page, ['*'], 'page', $page);
     }
 }
-

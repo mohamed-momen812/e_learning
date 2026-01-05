@@ -2,7 +2,6 @@
 
 namespace Modules\SuperAdmin\Http\Requests;
 
-use App\Models\Tenant;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BulkDeleteTenantRequest extends FormRequest

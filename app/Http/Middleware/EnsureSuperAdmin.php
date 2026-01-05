@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Core\Exceptions\BusinessException;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Core\Exceptions\BusinessException;
 
 class EnsureSuperAdmin
 {
@@ -18,7 +18,7 @@ class EnsureSuperAdmin
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             throw new BusinessException(
                 'auth.unauthenticated',
                 [],
@@ -26,7 +26,7 @@ class EnsureSuperAdmin
             );
         }
 
-        if (!$user->isSuperAdmin()) {
+        if (! $user->isSuperAdmin()) {
             throw new BusinessException(
                 'auth.unauthorized_super_admin_access',
                 [],

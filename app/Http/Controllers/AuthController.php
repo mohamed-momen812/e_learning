@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use App\Services\ImageService;
@@ -42,7 +42,7 @@ class AuthController extends BaseApiController
     }
 
     /**
-     * Login user 
+     * Login user
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -103,7 +103,7 @@ class AuthController extends BaseApiController
     {
         $user = $this->authService->me();
 
-        if (!$user) {
+        if (! $user) {
             return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
@@ -120,7 +120,7 @@ class AuthController extends BaseApiController
     {
         $user = $this->authService->me();
 
-        if (!$user) {
+        if (! $user) {
             return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
@@ -131,7 +131,7 @@ class AuthController extends BaseApiController
             unset($data['avatar']); // Remove from data array as it's not a user field
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $user->update($data);
         }
 
@@ -148,11 +148,11 @@ class AuthController extends BaseApiController
     {
         $user = $this->authService->me();
 
-        if (!$user) {
+        if (! $user) {
             return $this->errorResponse('auth.unauthenticated', [], 401);
         }
 
-        if (!Hash::check($request->validated('current_password'), $user->password)) {
+        if (! Hash::check($request->validated('current_password'), $user->password)) {
             return $this->errorResponse('auth.invalid_current_password', ['current_password' => ['auth.invalid_current_password']], 422);
         }
 

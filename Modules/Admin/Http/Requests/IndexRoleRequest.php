@@ -31,4 +31,3 @@ class IndexRoleRequest extends FormRequest
         ];
     }
 }
-

@@ -33,4 +33,3 @@ class IndexTenantRequest extends FormRequest
         ];
     }
 }
-

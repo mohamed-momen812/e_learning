@@ -10,6 +10,8 @@ class SetLocale
 {
     /**
      * Supported locales
+     *
+     * @return array<int, string>
      */
     protected function getSupportedLocales(): array
     {

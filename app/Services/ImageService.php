@@ -12,11 +12,10 @@ class ImageService
     /**
      * Upload and attach an image to a model
      *
-     * @param Model $model The model to attach the image to
-     * @param UploadedFile|null $file The uploaded file
-     * @param string $type Image type (e.g., 'avatar', 'profile', 'cover')
-     * @param string $disk Storage disk (default: 'public')
-     * @return Image|null
+     * @param  Model  $model  The model to attach the image to
+     * @param  UploadedFile|null  $file  The uploaded file
+     * @param  string  $type  Image type (e.g., 'avatar', 'profile', 'cover')
+     * @param  string  $disk  Storage disk (default: 'public')
      */
     public function uploadAndAttach(
         Model $model,
@@ -24,7 +23,7 @@ class ImageService
         string $type = 'avatar',
         string $disk = 'public'
     ): ?Image {
-        if (!$file || !$file->isValid()) {
+        if (! $file || ! $file->isValid()) {
             return null;
         }
 
@@ -56,10 +55,6 @@ class ImageService
 
     /**
      * Delete image by type
-     *
-     * @param Model $model
-     * @param string $type
-     * @return bool
      */
     public function deleteByType(Model $model, string $type): bool
     {
@@ -80,9 +75,6 @@ class ImageService
 
     /**
      * Delete all images for a model
-     *
-     * @param Model $model
-     * @return void
      */
     public function deleteAll(Model $model): void
     {
@@ -101,11 +93,6 @@ class ImageService
 
     /**
      * Generate unique filename
-     *
-     * @param UploadedFile $file
-     * @param Model $model
-     * @param string $type
-     * @return string
      */
     protected function generateFilename(UploadedFile $file, Model $model, string $type): string
     {
@@ -119,28 +106,22 @@ class ImageService
 
     /**
      * Get storage path for the image
-     *
-     * @param Model $model
-     * @param string $type
-     * @return string
      */
     protected function getStoragePath(Model $model, string $type): string
     {
         $modelType = strtolower(class_basename($model));
+
         return "images/{$modelType}/{$type}";
     }
 
     /**
      * Generate alt text for the image
      * Returns string - package will store in current locale automatically
-     *
-     * @param Model $model
-     * @param string $type
-     * @return string
      */
     protected function generateAltText(Model $model, string $type): string
     {
         $modelName = $model->name ?? $model->email ?? 'User';
-        return ucfirst($type) . " for {$modelName}";
+
+        return ucfirst($type)." for {$modelName}";
     }
 }

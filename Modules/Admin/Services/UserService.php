@@ -5,9 +5,9 @@ namespace Modules\Admin\Services;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\ImageService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
@@ -42,13 +42,14 @@ class UserService
             // Filter out roles that have admin-only permissions (like roles.create)
             $filteredRoles = array_filter($data['roles'], function ($roleName) {
                 $role = Role::where('name', $roleName)->where('guard_name', 'web')->first();
-                if (!$role) {
+                if (! $role) {
                     return false;
                 }
+
                 // Filter out roles that have admin-only permissions
-                return !$role->hasPermissionTo('roles.create');
+                return ! $role->hasPermissionTo('roles.create');
             });
-            if (!empty($filteredRoles)) {
+            if (! empty($filteredRoles)) {
                 $user->assignRole($filteredRoles);
             }
         }
@@ -86,7 +87,7 @@ class UserService
             $updateData['password'] = Hash::make($data['password']);
         }
 
-        if (!empty($updateData)) {
+        if (! empty($updateData)) {
             $user->update($updateData);
         }
 
@@ -100,11 +101,12 @@ class UserService
             // Filter out roles that have admin-only permissions
             $filteredRoles = array_filter($data['roles'], function ($roleName) {
                 $role = \App\Models\Role::where('name', $roleName)->where('guard_name', 'web')->first();
-                if (!$role) {
+                if (! $role) {
                     return false;
                 }
+
                 // Filter out roles that have admin-only permissions
-                return !$role->hasPermissionTo('roles.create');
+                return ! $role->hasPermissionTo('roles.create');
             });
             $user->syncRoles($filteredRoles);
         }
@@ -142,8 +144,9 @@ class UserService
             if ($user->can('roles.create')) {
                 $skipped[] = [
                     'id' => $user->id,
-                    'reason' => __('user.cannot_delete_admin_user')
+                    'reason' => __('user.cannot_delete_admin_user'),
                 ];
+
                 continue;
             }
 

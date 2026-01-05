@@ -2,13 +2,14 @@
 
 namespace Modules\Admin\Services;
 
-use App\Models\Role;
 use App\Core\Traits\HasDynamicOrdering;
+use App\Models\Role;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListRoleService
 {
     use HasDynamicOrdering;
+
     /**
      * Handle list request
      */
@@ -23,18 +24,18 @@ class ListRoleService
 
         $query = Role::query()->where('guard_name', 'web');
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
         // Filter by name
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
         // Search
-        if (!empty($search)) {
-            $query->where('name', 'like', '%' . $search . '%');
+        if (! empty($search)) {
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         // Apply dynamic ordering
@@ -44,4 +45,3 @@ class ListRoleService
         return $query->paginate($per_page, ['*'], 'page', $page);
     }
 }
-

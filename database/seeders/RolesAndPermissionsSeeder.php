@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
 use App\Models\Role;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -124,7 +124,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'attendance.bulk_delete' => ['en' => 'Bulk Delete Attendance', 'ar' => 'حذف الحضور بالجملة'],
             'attendance.update_order' => ['en' => 'Update Attendance Order', 'ar' => 'تحديث ترتيب الحضور'],
 
-
             // Reports permissions
             'reports.view' => ['en' => 'View Reports', 'ar' => 'عرض التقارير'],
             'reports.generate' => ['en' => 'Generate Reports', 'ar' => 'إنشاء التقارير'],
@@ -179,7 +178,7 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::firstOrCreate(
                 [
                     'name' => $permissionName,
-                    'guard_name' => 'web'
+                    'guard_name' => 'web',
                 ],
                 [
                     'label' => $label,
@@ -224,7 +223,7 @@ class RolesAndPermissionsSeeder extends Seeder
         return Role::firstOrCreate(
             [
                 'name' => $name,
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ],
             [
                 'label' => $label,
@@ -352,4 +351,3 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
     }
 }
-

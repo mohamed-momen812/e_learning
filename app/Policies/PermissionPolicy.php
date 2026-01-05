@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Permission;
+use App\Models\User;
 
 class PermissionPolicy
 {
@@ -31,4 +31,3 @@ class PermissionPolicy
         return $user->can('permissions.update_order');
     }
 }
-

@@ -88,4 +88,3 @@ class UserPolicy
         return $user->can('users.manage_permissions');
     }
 }
-

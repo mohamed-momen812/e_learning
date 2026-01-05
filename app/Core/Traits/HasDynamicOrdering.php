@@ -8,16 +8,14 @@ trait HasDynamicOrdering
 {
     /**
      * Apply dynamic ordering to query
-     * 
-     * @param Builder $query
-     * @param string|array $sort - Can be a string like "name" or "-name" or array like ["name", "-email"]
-     * @param array $allowedFields - Whitelist of allowed sortable fields (for security)
-     * @param string $defaultSort - Default sort field if none provided
-     * @return Builder
+     *
+     * @param  string|array  $sort  - Can be a string like "name" or "-name" or array like ["name", "-email"]
+     * @param  array  $allowedFields  - Whitelist of allowed sortable fields (for security)
+     * @param  string  $defaultSort  - Default sort field if none provided
      */
     protected function applyOrdering(
         Builder $query,
-        string|array $sort = null,
+        string|array|null $sort = null,
         array $allowedFields = [],
         string $defaultSort = 'created_at'
     ): Builder {
@@ -44,7 +42,7 @@ trait HasDynamicOrdering
             $direction = str_starts_with($sortField, '-') ? 'desc' : 'asc';
 
             // Security: Only allow sorting by whitelisted fields if provided
-            if (!empty($allowedFields) && !in_array($field, $allowedFields)) {
+            if (! empty($allowedFields) && ! in_array($field, $allowedFields)) {
                 continue; // Skip invalid fields
             }
 
@@ -59,10 +57,6 @@ trait HasDynamicOrdering
 
     /**
      * Check if a field is valid for sorting
-     * 
-     * @param Builder $query
-     * @param string $field
-     * @return bool
      */
     protected function isValidSortField(Builder $query, string $field): bool
     {
@@ -79,9 +73,6 @@ trait HasDynamicOrdering
      * - "name,email" (multiple fields, both ascending)
      * - "name,-email" (multiple fields, name ascending, email descending)
      * - ["name", "-email"] (array format)
-     * 
-     * @param string|array|null $sort
-     * @return array
      */
     protected function parseSortParameter(string|array|null $sort): array
     {

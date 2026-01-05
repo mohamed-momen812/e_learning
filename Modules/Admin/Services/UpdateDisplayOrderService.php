@@ -2,18 +2,17 @@
 
 namespace Modules\Admin\Services;
 
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class UpdateDisplayOrderService
 {
     /**
      * Update display order for users
-     * 
-     * @param array $orders - Array of ['id' => 1, 'display_order' => 2]
-     * @return bool
+     *
+     * @param  array  $orders  - Array of ['id' => 1, 'display_order' => 2]
      */
     public function updateUserOrder(array $orders): bool
     {
@@ -22,15 +21,15 @@ class UpdateDisplayOrderService
                 User::where('id', $order['id'])
                     ->update(['display_order' => $order['display_order']]);
             }
+
             return true;
         });
     }
 
     /**
      * Reorder users by IDs in order
-     * 
-     * @param array $ids - Array of IDs in desired order [1, 3, 2, 5]
-     * @return bool
+     *
+     * @param  array  $ids  - Array of IDs in desired order [1, 3, 2, 5]
      */
     public function reorderUsersByIds(array $ids): bool
     {
@@ -39,15 +38,15 @@ class UpdateDisplayOrderService
                 User::where('id', $id)
                     ->update(['display_order' => $index + 1]);
             }
+
             return true;
         });
     }
 
     /**
      * Update display order for roles
-     * 
-     * @param array $orders - Array of ['id' => 1, 'display_order' => 2]
-     * @return bool
+     *
+     * @param  array  $orders  - Array of ['id' => 1, 'display_order' => 2]
      */
     public function updateRoleOrder(array $orders): bool
     {
@@ -57,15 +56,15 @@ class UpdateDisplayOrderService
                     ->where('guard_name', 'web')
                     ->update(['display_order' => $order['display_order']]);
             }
+
             return true;
         });
     }
 
     /**
      * Reorder roles by IDs in order
-     * 
-     * @param array $ids - Array of IDs in desired order [1, 3, 2, 5]
-     * @return bool
+     *
+     * @param  array  $ids  - Array of IDs in desired order [1, 3, 2, 5]
      */
     public function reorderRolesByIds(array $ids): bool
     {
@@ -75,15 +74,15 @@ class UpdateDisplayOrderService
                     ->where('guard_name', 'web')
                     ->update(['display_order' => $index + 1]);
             }
+
             return true;
         });
     }
 
     /**
      * Update display order for permissions
-     * 
-     * @param array $orders - Array of ['id' => 1, 'display_order' => 2]
-     * @return bool
+     *
+     * @param  array  $orders  - Array of ['id' => 1, 'display_order' => 2]
      */
     public function updatePermissionOrder(array $orders): bool
     {
@@ -93,15 +92,15 @@ class UpdateDisplayOrderService
                     ->where('guard_name', 'web')
                     ->update(['display_order' => $order['display_order']]);
             }
+
             return true;
         });
     }
 
     /**
      * Reorder permissions by IDs in order
-     * 
-     * @param array $ids - Array of IDs in desired order [1, 3, 2, 5]
-     * @return bool
+     *
+     * @param  array  $ids  - Array of IDs in desired order [1, 3, 2, 5]
      */
     public function reorderPermissionsByIds(array $ids): bool
     {
@@ -111,6 +110,7 @@ class UpdateDisplayOrderService
                     ->where('guard_name', 'web')
                     ->update(['display_order' => $index + 1]);
             }
+
             return true;
         });
     }

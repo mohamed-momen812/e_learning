@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Models\Tenant;
-use App\Models\Role;
 use App\Models\Permission;
-use App\Policies\UserPolicy;
-use App\Policies\TenantPolicy;
-use App\Policies\RolePolicy;
+use App\Models\Role;
+use App\Models\Tenant;
+use App\Models\User;
 use App\Policies\PermissionPolicy;
+use App\Policies\RolePolicy;
+use App\Policies\TenantPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 

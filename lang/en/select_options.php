@@ -12,4 +12,3 @@ return [
         'retrieved' => 'Users retrieved successfully',
     ],
 ];
-

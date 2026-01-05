@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Permission;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 
 class SelectOptionsService
 {
@@ -28,11 +27,13 @@ class SelectOptionsService
             $prefix = "tenant_{$tenantId}_";
         }
 
-        return $prefix . $key;
+        return $prefix.$key;
     }
 
     /**
      * Get all select options
+     *
+     * @return array<string, array<int, array<string, mixed>>>
      */
     public function getAll(): array
     {
@@ -49,6 +50,8 @@ class SelectOptionsService
 
     /**
      * Get roles for select dropdown
+     *
+     * @return array<int, array<string, mixed>>
      */
     public function getRoles(): array
     {
@@ -59,10 +62,10 @@ class SelectOptionsService
                 ->orderBy('display_order')
                 ->orderBy('name')
                 ->get()
-                ->map(function ($role) {
+                ->map(function (Role $role): array {
                     return [
                         'id' => $role->id,
-                    'key' => $role->name,
+                        'key' => $role->name,
                         'label' => $role->label, // Translated label
                     ];
                 })
@@ -72,6 +75,8 @@ class SelectOptionsService
 
     /**
      * Get permissions for select dropdown
+     *
+     * @return array<int, array<string, mixed>>
      */
     public function getPermissions(): array
     {
@@ -82,10 +87,10 @@ class SelectOptionsService
                 ->orderBy('display_order')
                 ->orderBy('name')
                 ->get()
-                ->map(function ($permission) {
+                ->map(function (Permission $permission): array {
                     return [
                         'id' => $permission->id,
-                    'key' => $permission->name,
+                        'key' => $permission->name,
                         'label' => $permission->label ?? $permission->name,
                     ];
                 })
@@ -95,6 +100,8 @@ class SelectOptionsService
 
     /**
      * Get users for select dropdown (excluding admin users)
+     *
+     * @return array<int, array<string, mixed>>
      */
     public function getUsers(): array
     {
@@ -108,11 +115,11 @@ class SelectOptionsService
             $query->orderBy('display_order')->orderBy('name');
 
             return $query->get()
-                ->map(function ($user) {
+                ->map(function (User $user): array {
                     return [
                         'id' => $user->id,
-                    'key' => $user->id,
-                    'label' => $user->name,
+                        'key' => $user->id,
+                        'label' => $user->name,
                     ];
                 })
                 ->toArray();

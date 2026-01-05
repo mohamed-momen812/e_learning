@@ -19,7 +19,7 @@ class RoleResource extends JsonResource
             'name' => $this->name,
             'label' => $this->label, // UI display - translated
             'guard_name' => $this->guard_name,
-            
+
             // Relationships
             'permissions' => $this->whenLoaded('permissions', function () {
                 return $this->permissions->map(function ($permission) {
@@ -30,11 +30,10 @@ class RoleResource extends JsonResource
                     ];
                 });
             }),
-            
+
             // Timestamps
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }
-

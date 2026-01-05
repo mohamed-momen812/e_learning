@@ -22,7 +22,6 @@ class InitializeTenancyByHeader extends InitializeTenancyBySubdomain
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -52,7 +51,7 @@ class InitializeTenancyByHeader extends InitializeTenancyBySubdomain
 
     /**
      * Override makeSubdomain to get subdomain from header instead of hostname.
-     * 
+     *
      * @param  \Illuminate\Http\Request|string  $requestOrHostname
      * @return string|Response|Exception|mixed
      */
@@ -70,7 +69,6 @@ class InitializeTenancyByHeader extends InitializeTenancyBySubdomain
     /**
      * Get the subdomain from the request header.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return string|Exception|Response
      */
     protected function getSubdomainFromHeader(Request $request)
@@ -78,15 +76,15 @@ class InitializeTenancyByHeader extends InitializeTenancyBySubdomain
         $subdomain = $request->header(static::$headerName);
 
         // If header is missing, return exception
-        if (!$subdomain) {
-            return new NotASubdomainException('Header ' . static::$headerName . ' is required');
+        if (! $subdomain) {
+            return new NotASubdomainException('Header '.static::$headerName.' is required');
         }
 
         // Clean the subdomain (remove any whitespace, convert to lowercase)
         $subdomain = strtolower(trim($subdomain));
 
         // Validate subdomain format (alphanumeric and hyphens only)
-        if (!preg_match('/^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$/', $subdomain)) {
+        if (! preg_match('/^[a-z0-9]([a-z0-9\-]*[a-z0-9])?$/', $subdomain)) {
             return new NotASubdomainException('Invalid subdomain format in header');
         }
 

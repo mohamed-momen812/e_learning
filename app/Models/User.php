@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +38,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /** @var string */
     protected $guard_name = 'web';
 
     /**
@@ -64,16 +65,20 @@ class User extends Authenticatable
 
     /**
      * Get all images for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Image, $this>
      */
-    public function images()
+    public function images(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
     }
 
     /**
      * Get the user's avatar image.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne<Image, $this>
      */
-    public function avatar()
+    public function avatar(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Image::class, 'imageable')->where('type', 'avatar');
     }

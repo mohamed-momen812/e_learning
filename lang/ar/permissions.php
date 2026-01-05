@@ -11,4 +11,3 @@ return [
     'assigned_successfully' => 'تم تعيين صلاحية :permission بنجاح',
     'manage_permissions' => 'إدارة الصلاحيات',
 ];
-

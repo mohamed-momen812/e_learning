@@ -6,9 +6,9 @@ use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\DirectPermissionResource;
 use App\Models\User;
 use App\Services\DirectPermissionService;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Http\Requests\AssignDirectPermissionRequest;
 use Modules\Admin\Http\Requests\RevokeDirectPermissionRequest;
-use Illuminate\Http\JsonResponse;
 
 class DirectPermissionController extends BaseApiController
 {

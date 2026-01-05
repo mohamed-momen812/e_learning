@@ -2,25 +2,29 @@
 
 namespace App\Services;
 
+use App\Core\Exceptions\BusinessException;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Core\Exceptions\BusinessException;
 
 class AuthService
 {
     public function __construct(
         protected ImageService $imageService
     ) {}
+
     /**
      * Authenticate user and return token
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function login(array $data): array
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw new BusinessException(
                 'auth.invalid_credentials',
                 ['email' => ['auth.invalid_credentials']],
@@ -42,12 +46,15 @@ class AuthService
     /**
      * Authenticate admin user (teacher/assistant) and return token
      * Only allows users with teacher or assistant roles
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function adminLogin(array $data): array
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw new BusinessException(
                 'auth.invalid_credentials',
                 ['email' => ['auth.invalid_credentials']],
@@ -56,7 +63,7 @@ class AuthService
         }
 
         // Only allow users with admin permissions (users.create or users.view)
-        if (!$user->can('users.create') && !$user->can('users.view')) {
+        if (! $user->can('users.create') && ! $user->can('users.view')) {
             throw new BusinessException(
                 'auth.unauthorized_admin_access',
                 ['email' => ['auth.unauthorized_admin_access']],
@@ -78,12 +85,15 @@ class AuthService
     /**
      * Authenticate super admin user and return token
      * Only allows users with is_super_admin = true
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function superAdminLogin(array $data): array
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw new BusinessException(
                 'auth.invalid_credentials',
                 ['email' => ['auth.invalid_credentials']],
@@ -92,7 +102,7 @@ class AuthService
         }
 
         // Only allow super admin users
-        if (!$user->isSuperAdmin()) {
+        if (! $user->isSuperAdmin()) {
             throw new BusinessException(
                 'auth.unauthorized_super_admin_access',
                 ['email' => ['auth.unauthorized_super_admin_access']],
@@ -113,6 +123,9 @@ class AuthService
 
     /**
      * Register a new user
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function register(array $data, ?UploadedFile $avatar = null): array
     {
@@ -152,7 +165,7 @@ class AuthService
     public function logout(): void
     {
         $user = Auth::user();
-        
+
         if ($user) {
             $user->currentAccessToken()?->delete();
         }

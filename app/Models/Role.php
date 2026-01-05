@@ -28,4 +28,3 @@ class Role extends SpatieRole
         ]);
     }
 }
-

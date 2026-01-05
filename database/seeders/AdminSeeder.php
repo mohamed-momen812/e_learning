@@ -25,6 +25,7 @@ class AdminSeeder extends Seeder
 
             if ($existingAdmin) {
                 $this->command->info('Super admin user already exists. Skipping...');
+
                 return;
             }
 
@@ -135,7 +136,7 @@ class AdminSeeder extends Seeder
 
             $this->command->info('Super admin user created successfully!');
             $this->command->info('Super admin user role: super-admin');
-            $this->command->info('Super admin user permissions: ' . implode(', ', $admin->getPermissionsViaRoles()->pluck('name')->toArray()));
+            $this->command->info('Super admin user permissions: '.implode(', ', $admin->getPermissionsViaRoles()->pluck('name')->toArray()));
             $this->command->info('Email: momen@mawsoaa.com');
             $this->command->warn('Password: mawsoaa@0005000 (Please change this in production!)');
         });

@@ -5,12 +5,12 @@ namespace Modules\Admin\Http\Controllers;
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\PermissionResource;
 use App\Models\Permission;
-use Modules\Admin\Services\PermissionService;
-use Modules\Admin\Services\ListPermissionService;
-use Modules\Admin\Services\UpdateDisplayOrderService;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Http\Requests\IndexPermissionRequest;
 use Modules\Admin\Http\Requests\UpdatePermissionDisplayOrderRequest;
-use Illuminate\Http\JsonResponse;
+use Modules\Admin\Services\ListPermissionService;
+use Modules\Admin\Services\PermissionService;
+use Modules\Admin\Services\UpdateDisplayOrderService;
 
 class PermissionController extends BaseApiController
 {
@@ -56,7 +56,7 @@ class PermissionController extends BaseApiController
         $this->authorize('view', $permission);
 
         return $this->successResponse(
-            new PermissionResource($permission), 
+            new PermissionResource($permission),
             'data.retrieved'
         );
     }
@@ -67,7 +67,7 @@ class PermissionController extends BaseApiController
     public function updateOrder(UpdatePermissionDisplayOrderRequest $request): JsonResponse
     {
         $this->authorize('updateOrder', Permission::class);
-        
+
         if ($request->has('ids')) {
             $this->orderService->reorderPermissionsByIds($request->validated('ids'));
         } else {
@@ -77,4 +77,3 @@ class PermissionController extends BaseApiController
         return $this->successResponse(null, 'permissions.order_updated');
     }
 }
-

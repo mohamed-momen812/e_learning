@@ -57,4 +57,3 @@ class SelectOptionsController extends BaseApiController
         );
     }
 }
-

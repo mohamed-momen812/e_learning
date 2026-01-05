@@ -3,9 +3,9 @@
 namespace App\Core\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Controller;
 
 abstract class BaseApiController extends Controller
 {
@@ -14,22 +14,24 @@ abstract class BaseApiController extends Controller
     /**
      * Return success response
      */
-    protected function successResponse($data, ?string $message = null, int $statusCode = 200): JsonResponse
+    protected function successResponse(mixed $data, ?string $message = null, int $statusCode = 200): JsonResponse
     {
         $response = [
             'success' => true,
             'data' => $data,
         ];
-        
+
         if ($message) {
             $response['message'] = __($message);
         }
-        
+
         return response()->json($response, $statusCode);
     }
-    
+
     /**
      * Return error response
+     *
+     * @param  array<string, mixed>  $errors
      */
     protected function errorResponse(string $message, array $errors = [], int $statusCode = 400): JsonResponse
     {
@@ -37,19 +39,19 @@ abstract class BaseApiController extends Controller
             'success' => false,
             'message' => __($message),
         ];
-        
-        if (!empty($errors)) {
+
+        if (! empty($errors)) {
             $response['errors'] = $this->translateErrors($errors);
         }
-        
+
         return response()->json($response, $statusCode);
     }
 
     /**
      * Translate error messages recursively
-     * 
-     * @param array $errors
-     * @return array
+     *
+     * @param  array<string, mixed>  $errors
+     * @return array<string, array<int, string>>
      */
     protected function translateErrors(array $errors): array
     {
@@ -64,9 +66,11 @@ abstract class BaseApiController extends Controller
                 // translate it
                 if (is_string($message) && preg_match('/^[a-z_]+\.[a-z_]+(\.[a-z_]+)*$/i', $message)) {
                     $translated = __($message);
+
                     // Only use translation if it's different from the key (translation exists)
                     return $translated !== $message ? $translated : $message;
                 }
+
                 // Already translated or not a translation key, return as-is
                 return $message;
             }, $messageArray);
@@ -74,15 +78,15 @@ abstract class BaseApiController extends Controller
 
         return $translatedErrors;
     }
-    
+
     /**
      * Return created response
      */
-    protected function createdResponse($data, ?string $message = null): JsonResponse
+    protected function createdResponse(mixed $data, ?string $message = null): JsonResponse
     {
         return $this->successResponse($data, $message, 201);
     }
-    
+
     /**
      * Return no content response
      */
@@ -90,20 +94,22 @@ abstract class BaseApiController extends Controller
     {
         return response()->json(null, 204);
     }
-    
+
     /**
      * Return paginated response
      * Supports both raw models and resources
+     *
+     * @param  LengthAwarePaginator<int, mixed>  $paginator
      */
     protected function paginatedResponse(LengthAwarePaginator $paginator, ?string $message = null, ?string $resourceClass = null): JsonResponse
     {
         $items = $paginator->items();
-        
+
         // Transform items using resource if provided
         if ($resourceClass && class_exists($resourceClass)) {
             $items = $resourceClass::collection($items);
         }
-        
+
         $response = [
             'success' => true,
             'data' => $items,
@@ -114,12 +120,11 @@ abstract class BaseApiController extends Controller
                 'last_page' => $paginator->lastPage(),
             ],
         ];
-        
+
         if ($message) {
             $response['message'] = __($message);
         }
-        
+
         return response()->json($response, 200);
     }
 }
-

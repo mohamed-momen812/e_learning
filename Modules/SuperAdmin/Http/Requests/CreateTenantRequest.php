@@ -47,7 +47,7 @@ class CreateTenantRequest extends FormRequest
                 Rule::unique('tenants', 'phone')->ignore($tenantId),
             ],
             'is_active' => ['sometimes', 'boolean'],
-            'password' => $this->isMethod('POST') && !$tenantId ? ['required', 'string', 'min:8'] : ['nullable', 'string', 'min:8'],
+            'password' => $this->isMethod('POST') && ! $tenantId ? ['required', 'string', 'min:8'] : ['nullable', 'string', 'min:8'],
         ];
     }
 
@@ -72,7 +72,7 @@ class CreateTenantRequest extends FormRequest
             // Validate each domain is unique (excluding existing ones for update)
             foreach ($domains as $index => $domain) {
                 // For update, exclude current tenant's domains
-                if ($tenantId && !empty($existingDomains) && in_array($domain, $existingDomains)) {
+                if ($tenantId && ! empty($existingDomains) && in_array($domain, $existingDomains)) {
                     continue; // Skip validation for existing domains
                 }
 
@@ -91,4 +91,3 @@ class CreateTenantRequest extends FormRequest
         });
     }
 }
-

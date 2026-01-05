@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
-use Spatie\Translatable\HasTranslations;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
@@ -40,6 +40,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     /**
      * Get the list of real database columns (not virtual columns stored in data JSON).
      * This prevents VirtualColumn trait from storing these attributes in the data column.
+     *
+     * @return array<int, string>
      */
     public static function getCustomColumns(): array
     {

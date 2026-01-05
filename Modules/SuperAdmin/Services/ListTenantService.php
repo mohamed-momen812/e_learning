@@ -2,13 +2,14 @@
 
 namespace Modules\SuperAdmin\Services;
 
-use App\Models\Tenant;
 use App\Core\Traits\HasDynamicOrdering;
+use App\Models\Tenant;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListTenantService
 {
     use HasDynamicOrdering;
+
     /**
      * Handle list request
      */
@@ -23,22 +24,22 @@ class ListTenantService
 
         $query = Tenant::query();
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
         if (isset($filters['is_active'])) {
             $query->where('is_active', $filters['is_active']);
         }
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
             });
         }
 

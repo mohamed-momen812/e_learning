@@ -29,4 +29,3 @@ class IndexPermissionRequest extends FormRequest
         ];
     }
 }
-

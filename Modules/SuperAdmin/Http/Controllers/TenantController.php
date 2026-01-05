@@ -5,12 +5,12 @@ namespace Modules\SuperAdmin\Http\Controllers;
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
+use Illuminate\Http\JsonResponse;
+use Modules\SuperAdmin\Http\Requests\BulkDeleteTenantRequest;
 use Modules\SuperAdmin\Http\Requests\CreateTenantRequest;
 use Modules\SuperAdmin\Http\Requests\IndexTenantRequest;
-use Modules\SuperAdmin\Http\Requests\BulkDeleteTenantRequest;
-use Modules\SuperAdmin\Services\TenantService;
 use Modules\SuperAdmin\Services\ListTenantService;
-use Illuminate\Http\JsonResponse;
+use Modules\SuperAdmin\Services\TenantService;
 
 class TenantController extends BaseApiController
 {

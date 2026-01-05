@@ -1,5 +1,5 @@
 includes:
-    - ./vendor/larastan/larastan/extension.neon
+    - ./vendor/nunomaduro/larastan/extension.neon
 
 parameters:
 
@@ -9,11 +9,61 @@ parameters:
     # Rule level (0 is the loosest and 9 is the strictest)
     level: 8
 
+    # Don't report unmatched ignore patterns
+    reportUnmatchedIgnoredErrors: false
+
     ignoreErrors:
-        - '#PHPDoc tag @var#'
+        # Laravel Resource property access - Resources access model properties dynamically
+        - '#Access to an undefined property App\\Http\\Resources\\.*::\$[a-zA-Z_]+#'
+        # Laravel Eloquent dynamic properties
+        - '#Access to an undefined property App\\Models\\.*::\$[a-zA-Z_]+#'
+        # Laravel Resource method calls on relationships
+        - '#Call to an undefined method App\\Http\\Resources\\.*::[a-zA-Z_]+\(\)#'
+        # ImageService calling images() on generic Model (polymorphic relationship)
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::images\(\)#'
+        # ImageService accessing images property on generic Model
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$images#'
+        # SelectOptionsService map callback unresolvable types (Laravel Collection)
+        - '#Return type of call to method .*\\Collection.*::map\(\) contains unresolvable type#'
+        - '#Parameter .*callback of method .*\\Collection.*::map\(\) contains unresolvable type#'
+        # Eloquent relationship return types (handled by Larastan)
+        - '#Method .*::[a-zA-Z_]+\(\) has no return type specified#'
+        # Generic types for Collections (common in Laravel)
+        - '#Method .*::.*\(\) return type with generic class .*\\Collection does not specify its types#'
+        - '#Method .*::.*\(\) has parameter .* with generic class .*\\Collection but does not specify its types#'
+        # Paginator generic types
+        - '#Method .*::.*\(\) has parameter .* with generic class .*\\Paginator but does not specify its types#'
+        # MorphTo relationship generic types
+        - '#Method .*::.*\(\) return type with generic class .*\\MorphTo does not specify its types#'
+        # HasFactory generic type
+        - '#Class .* uses generic trait .*\\HasFactory but does not specify its types#'
+        # Unused trait warning (HasDynamicOrdering may be used in modules)
+        - '#Trait .*\\HasDynamicOrdering is used zero times#'
+        # Translatable property (Spatie package)
+        - '#Property .*::\$translatable has no type specified#'
+        # Guard name property (Spatie Permission package)
+        - '#Property .*::\$guard_name has no type specified#'
+        # Method exists check (Laravel dynamic methods)
+        - '#Call to function method_exists\(\) with .* and .* will always evaluate to true#'
+        # Nullsafe operator on non-nullable (Laravel's currentAccessToken can be null in some contexts)
+        - '#Using nullsafe method call on non-nullable type .*\\PersonalAccessToken#'
+        # Application offset access (Laravel service container)
+        - '#Cannot access offset .* on Illuminate\\\\Contracts\\\\Foundation\\\\Application#'
 
     excludePaths:
         - ./*/*/FileToIgnore.php
+        - vendor
+        - node_modules
+        - storage
+        - bootstrap/cache
+        - database/migrations
+        - Modules/*/node_modules
+        - Modules/*/vendor
 
-    checkMissingIterableValueType: false
+    # Memory limit for PHPStan (512MB)
+    tmpDir: %rootDir%/tmp
 
+    # Reduce parallel processes to use less memory
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 2

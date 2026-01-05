@@ -14,7 +14,7 @@ class RoleService
     {
         // Get the next display_order value
         $maxOrder = Role::where('guard_name', 'web')->max('display_order') ?? 0;
-        
+
         $data = [
             'name' => $name,
             'guard_name' => 'web', // Always use 'web' guard
@@ -27,7 +27,7 @@ class RoleService
 
         $role = Role::create($data);
 
-        if (!empty($permissions)) {
+        if (! empty($permissions)) {
             $role->givePermissionTo($permissions);
         }
 
@@ -49,12 +49,12 @@ class RoleService
             $data['label'] = $label;
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $role->update($data);
         }
 
         // Sync permissions if provided
-        if (!empty($permissions) || (isset($permissions) && empty($permissions))) {
+        if (! empty($permissions) || (isset($permissions) && empty($permissions))) {
             $role->syncPermissions($permissions);
         }
 
@@ -67,6 +67,7 @@ class RoleService
     public function deleteRole(string $id): bool
     {
         $role = Role::findOrFail($id);
+
         return $role->delete();
     }
 
@@ -76,7 +77,7 @@ class RoleService
     public function bulkDeleteRoles(array $ids): array
     {
         $roles = Role::whereIn('id', $ids)->get();
-        
+
         $deleted = [];
         $skipped = [];
 
@@ -87,7 +88,7 @@ class RoleService
             } catch (\Exception $e) {
                 $skipped[] = [
                     'id' => $role->id,
-                    'reason' => $e->getMessage()
+                    'reason' => $e->getMessage(),
                 ];
             }
         }
@@ -116,4 +117,3 @@ class RoleService
         return Role::with('permissions')->findOrFail($id);
     }
 }
-

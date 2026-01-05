@@ -5,15 +5,15 @@ namespace Modules\Admin\Http\Controllers;
 use App\Core\Controllers\BaseApiController;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
+use Modules\Admin\Http\Requests\BulkDeleteRoleRequest;
 use Modules\Admin\Http\Requests\CreateRoleRequest;
-use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Http\Requests\IndexRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleDisplayOrderRequest;
-use Modules\Admin\Http\Requests\BulkDeleteRoleRequest;
-use Modules\Admin\Services\RoleService;
+use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Services\ListRoleService;
+use Modules\Admin\Services\RoleService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
-use Illuminate\Http\JsonResponse;
 
 class RoleController extends BaseApiController
 {

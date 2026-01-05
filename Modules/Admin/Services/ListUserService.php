@@ -2,13 +2,14 @@
 
 namespace Modules\Admin\Services;
 
-use App\Models\User;
 use App\Core\Traits\HasDynamicOrdering;
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListUserService
 {
     use HasDynamicOrdering;
+
     /**
      * Handle list request
      */
@@ -28,7 +29,7 @@ class ListUserService
             $q->whereIn('name', ['teacher']);
         });
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
@@ -37,14 +38,14 @@ class ListUserService
         }
 
         if (isset($filters['email'])) {
-            $query->where('email', 'like', '%' . $filters['email'] . '%');
+            $query->where('email', 'like', '%'.$filters['email'].'%');
         }
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%');
             });
         }
 
@@ -55,4 +56,3 @@ class ListUserService
         return $query->paginate($per_page, ['*'], 'page', $page);
     }
 }
-

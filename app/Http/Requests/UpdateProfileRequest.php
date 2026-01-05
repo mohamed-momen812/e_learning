@@ -17,6 +17,8 @@ class UpdateProfileRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @return array<string, array<int, string|\Illuminate\Validation\Rules\Unique>>
      */
     public function rules(): array
     {
@@ -36,4 +38,3 @@ class UpdateProfileRequest extends FormRequest
         ];
     }
 }
-

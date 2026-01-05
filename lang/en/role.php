@@ -8,4 +8,3 @@ return [
     'bulk_deleted' => 'Roles deleted successfully',
     'bulk_deleted_with_skipped' => 'Roles deleted successfully, but :count role(s) were not deleted due to errors',
 ];
-

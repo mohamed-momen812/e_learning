@@ -14,4 +14,3 @@ return [
     'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
     'password_changed' => 'تم تغيير كلمة المرور بنجاح',
 ];
-

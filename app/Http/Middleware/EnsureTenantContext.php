@@ -16,7 +16,7 @@ class EnsureTenantContext
     public function handle(Request $request, Closure $next): Response
     {
         // Validate that tenant context is initialized
-        if (!tenancy()->initialized) {
+        if (! tenancy()->initialized) {
             return response()->json([
                 'success' => false,
                 'message' => __('tenant.context_not_initialized'),
@@ -25,7 +25,7 @@ class EnsureTenantContext
 
         // Validate that the tenant exists
         $tenant = tenancy()->tenant;
-        if (!$tenant) {
+        if (! $tenant) {
             return response()->json([
                 'success' => false,
                 'message' => __('tenant.not_found'),
@@ -35,4 +35,3 @@ class EnsureTenantContext
         return $next($request);
     }
 }
-

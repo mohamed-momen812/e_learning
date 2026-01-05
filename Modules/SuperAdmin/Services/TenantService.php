@@ -3,8 +3,8 @@
 namespace Modules\SuperAdmin\Services;
 
 use App\Models\Tenant;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class TenantService
@@ -17,7 +17,7 @@ class TenantService
         return DB::connection('central')->transaction(function () use ($data) {
             // Get the next display_order value
             $maxOrder = Tenant::max('display_order') ?? 0;
-            
+
             $tenant = Tenant::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -70,7 +70,7 @@ class TenantService
                 $updateData['is_active'] = $data['is_active'];
             }
 
-            if (!empty($updateData)) {
+            if (! empty($updateData)) {
                 $tenant->update($updateData);
             }
 
@@ -86,7 +86,7 @@ class TenantService
                 $domainsToAdd = array_diff($newDomains, $existingDomains);
 
                 // Delete removed domains
-                if (!empty($domainsToDelete)) {
+                if (! empty($domainsToDelete)) {
                     $tenant->domains()->whereIn('domain', $domainsToDelete)->delete();
                 }
 
@@ -107,6 +107,7 @@ class TenantService
     {
         // Note: The TenantDeleted event will automatically delete the database
         $tenant = Tenant::findOrFail($id);
+
         return $tenant->delete();
     }
 
@@ -128,7 +129,7 @@ class TenantService
             } catch (\Exception $e) {
                 $skipped[] = [
                     'id' => $tenant->id,
-                    'reason' => $e->getMessage()
+                    'reason' => $e->getMessage(),
                 ];
             }
         }

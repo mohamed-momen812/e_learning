@@ -23,4 +23,3 @@ class PermissionService
         return Permission::where('guard_name', 'web')->findOrFail($id);
     }
 }
-

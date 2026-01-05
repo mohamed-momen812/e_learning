@@ -9,4 +9,3 @@ return [
     'bulk_deleted' => 'Tenants deleted successfully',
     'bulk_deleted_with_skipped' => 'Tenants deleted successfully, but :count tenant(s) were not deleted due to errors',
 ];
-

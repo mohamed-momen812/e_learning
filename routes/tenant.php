@@ -6,9 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SelectOptionsController;
 use App\Http\Middleware\InitializeTenancyByHeader;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
-use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
 |--------------------------------------------------------------------------

@@ -8,7 +8,6 @@ use Modules\SuperAdmin\Http\Controllers\TenantController;
 // - 'super-admin' prefix
 // - 'auth:sanctum' and 'super.admin' middleware
 
-
 Route::get('tenants', [TenantController::class, 'index'])->name('superadmin.tenants.index');
 Route::post('tenants', [TenantController::class, 'store'])->name('superadmin.tenants.store');
 Route::post('tenants/bulk-delete', [TenantController::class, 'bulkDestroy'])->name('superadmin.tenants.bulk_destroy');
