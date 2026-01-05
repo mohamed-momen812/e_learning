@@ -9,6 +9,7 @@ use Modules\Admin\Http\Requests\CreateUserRequest;
 use Modules\Admin\Http\Requests\UpdateUserRequest;
 use Modules\Admin\Http\Requests\IndexUserRequest;
 use Modules\Admin\Http\Requests\UpdateDisplayOrderRequest;
+use Modules\Admin\Http\Requests\BulkDeleteUserRequest;
 use Modules\Admin\Services\UserService;
 use Modules\Admin\Services\ListUserService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
@@ -118,6 +119,23 @@ class UserController extends BaseApiController
         $this->service->delete($id);
 
         return $this->noContentResponse();
+    }
+
+    /**
+     * Bulk delete users
+     */
+    public function bulkDestroy(BulkDeleteUserRequest $request): JsonResponse
+    {
+        $this->authorize('bulkDelete', User::class);
+
+        $result = $this->service->bulkDelete($request->validated('ids'));
+
+        $message = 'user.bulk_deleted';
+        if ($result['skipped_count'] > 0) {
+            $message = 'user.bulk_deleted_with_skipped';
+        }
+
+        return $this->successResponse($result, $message);
     }
 
     /**

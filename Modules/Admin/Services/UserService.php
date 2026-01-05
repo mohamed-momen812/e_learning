@@ -21,7 +21,7 @@ class UserService
     {
         // Get the next display_order value
         $maxOrder = User::max('display_order') ?? 0;
-        
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -58,11 +58,11 @@ class UserService
 
         // Prevent updating admin users
         if ($user->hasAnyRole(['teacher'])) {
-            abort(404, 'User is an admin, cannot be updated');
+            abort(404, __('user.cannot_update_admin_user'));
         }
 
         $updateData = [];
-        
+
         if (isset($data['name'])) {
             $updateData['name'] = $data['name'];
         }
@@ -109,10 +109,42 @@ class UserService
 
         // Prevent deleting admin users
         if ($user->hasAnyRole(['teacher'])) {
-            abort(404, 'Admin User cannot be deleted');
+            abort(404, __('user.cannot_delete_admin_user'));
         }
 
         return $user->delete();
+    }
+
+    /**
+     * Bulk delete users (excludes admin users)
+     */
+    public function bulkDelete(array $ids): array
+    {
+        $users = User::with('roles')->whereIn('id', $ids)->get();
+
+        $deleted = [];
+        $skipped = [];
+
+        foreach ($users as $user) {
+            // Prevent deleting admin users
+            if ($user->hasAnyRole(['teacher'])) {
+                $skipped[] = [
+                    'id' => $user->id,
+                    'reason' => __('user.cannot_delete_admin_user')
+                ];
+                continue;
+            }
+
+            $user->delete();
+            $deleted[] = $user->id;
+        }
+
+        return [
+            'deleted' => $deleted,
+            'skipped' => $skipped,
+            'deleted_count' => count($deleted),
+            'skipped_count' => count($skipped),
+        ];
     }
 
     /**
@@ -137,10 +169,9 @@ class UserService
         $user = User::with('roles')->findOrFail($id);
 
         if ($user->hasAnyRole(['teacher'])) {
-            abort(404, 'Can not find admin user');
+            abort(404, __('user.cannot_find_admin_user'));
         }
 
         return $user;
     }
 }
-

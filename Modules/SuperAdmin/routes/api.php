@@ -11,6 +11,7 @@ use Modules\SuperAdmin\Http\Controllers\TenantController;
 
 Route::get('tenants', [TenantController::class, 'index'])->name('superadmin.tenants.index');
 Route::post('tenants', [TenantController::class, 'store'])->name('superadmin.tenants.store');
+Route::post('tenants/bulk-delete', [TenantController::class, 'bulkDestroy'])->name('superadmin.tenants.bulk_destroy');
 Route::get('tenants/{id}', [TenantController::class, 'show'])->name('superadmin.tenants.show');
 Route::post('tenants/{id}', [TenantController::class, 'update'])->name('superadmin.tenants.update');
 Route::delete('tenants/{id}', [TenantController::class, 'destroy'])->name('superadmin.tenants.destroy');

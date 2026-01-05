@@ -63,6 +63,13 @@ class UserPolicy
         // Only teachers can delete users
         return $user->hasRole('teacher');
     }
+    /**
+     * Determine if the user can bulk delete users.
+     */
+    public function bulkDelete(User $user): bool
+    {
+        return $user->hasRole('teacher');
+    }
 
     /**
      * Determine if the user can update display order (bulk operation).

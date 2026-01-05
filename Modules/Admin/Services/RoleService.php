@@ -71,6 +71,36 @@ class RoleService
     }
 
     /**
+     * Bulk delete roles
+     */
+    public function bulkDeleteRoles(array $ids): array
+    {
+        $roles = Role::whereIn('id', $ids)->get();
+        
+        $deleted = [];
+        $skipped = [];
+
+        foreach ($roles as $role) {
+            try {
+                $role->delete();
+                $deleted[] = $role->id;
+            } catch (\Exception $e) {
+                $skipped[] = [
+                    'id' => $role->id,
+                    'reason' => $e->getMessage()
+                ];
+            }
+        }
+
+        return [
+            'deleted' => $deleted,
+            'skipped' => $skipped,
+            'deleted_count' => count($deleted),
+            'skipped_count' => count($skipped),
+        ];
+    }
+
+    /**
      * Find role by ID
      */
     public function find(string $id): ?Model

@@ -7,6 +7,7 @@ use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
 use Modules\SuperAdmin\Http\Requests\CreateTenantRequest;
 use Modules\SuperAdmin\Http\Requests\IndexTenantRequest;
+use Modules\SuperAdmin\Http\Requests\BulkDeleteTenantRequest;
 use Modules\SuperAdmin\Services\TenantService;
 use Modules\SuperAdmin\Services\ListTenantService;
 use Illuminate\Http\JsonResponse;
@@ -16,8 +17,7 @@ class TenantController extends BaseApiController
     public function __construct(
         protected TenantService $service,
         protected ListTenantService $listService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of tenants
@@ -57,7 +57,7 @@ class TenantController extends BaseApiController
         $tenant = $this->service->create($request->validated());
 
         return $this->createdResponse(
-            new TenantResource($tenant->load('domains')), 
+            new TenantResource($tenant->load('domains')),
             'tenant.created'
         );
     }
@@ -71,7 +71,7 @@ class TenantController extends BaseApiController
         $this->authorize('view', $tenant);
 
         return $this->successResponse(
-            new TenantResource($tenant->load('domains')), 
+            new TenantResource($tenant->load('domains')),
             'data.retrieved'
         );
     }
@@ -87,7 +87,7 @@ class TenantController extends BaseApiController
         $tenant = $this->service->update($id, $request->validated());
 
         return $this->successResponse(
-            new TenantResource($tenant->load('domains')), 
+            new TenantResource($tenant->load('domains')),
             'tenant.updated'
         );
     }
@@ -104,5 +104,21 @@ class TenantController extends BaseApiController
 
         return $this->noContentResponse();
     }
-}
 
+    /**
+     * Bulk delete tenants
+     */
+    public function bulkDestroy(BulkDeleteTenantRequest $request): JsonResponse
+    {
+        $this->authorize('bulkDelete', Tenant::class);
+
+        $result = $this->service->bulkDelete($request->validated('ids'));
+
+        $message = 'tenant.bulk_deleted';
+        if ($result['skipped_count'] > 0) {
+            $message = 'tenant.bulk_deleted_with_skipped';
+        }
+
+        return $this->successResponse($result, $message);
+    }
+}

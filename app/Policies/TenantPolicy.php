@@ -46,4 +46,12 @@ class TenantPolicy
     {
         return $user->isSuperAdmin();
     }
+
+    /**
+     * Determine if the user can bulk delete tenants.
+     */
+    public function bulkDelete(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
 }

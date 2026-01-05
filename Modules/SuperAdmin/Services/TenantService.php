@@ -111,6 +111,37 @@ class TenantService
     }
 
     /**
+     * Bulk delete tenants
+     */
+    public function bulkDelete(array $ids): array
+    {
+        $tenants = Tenant::whereIn('id', $ids)->get();
+
+        $deleted = [];
+        $skipped = [];
+
+        foreach ($tenants as $tenant) {
+            try {
+                // Note: The TenantDeleted event will automatically delete the database
+                $tenant->delete();
+                $deleted[] = $tenant->id;
+            } catch (\Exception $e) {
+                $skipped[] = [
+                    'id' => $tenant->id,
+                    'reason' => $e->getMessage()
+                ];
+            }
+        }
+
+        return [
+            'deleted' => $deleted,
+            'skipped' => $skipped,
+            'deleted_count' => count($deleted),
+            'skipped_count' => count($skipped),
+        ];
+    }
+
+    /**
      * Find tenant by ID
      */
     public function find(string $id): ?Model

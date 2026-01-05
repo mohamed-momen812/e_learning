@@ -12,18 +12,20 @@ use Modules\Admin\Http\Controllers\PermissionController;
 // - 'auth:sanctum' and 'admin' middleware
 
 Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
-Route::get('users/{id}', [UserController::class, 'show'])->name('admin.users.show');
 Route::post('users', [UserController::class, 'store'])->name('admin.users.store');
+Route::post('users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('admin.users.bulk_destroy');
+Route::post('reorder/users', [UserController::class, 'updateOrder'])->name('admin.users.reorder');
+Route::get('users/{id}', [UserController::class, 'show'])->name('admin.users.show');
 Route::post('users/{id}', [UserController::class, 'update'])->name('admin.users.update');
 Route::delete('users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-Route::post('reorder/users', [UserController::class, 'updateOrder'])->name('admin.users.reorder');
 
 Route::get('roles', [RoleController::class, 'index'])->name('admin.roles.index');
-Route::get('roles/{id}', [RoleController::class, 'show'])->name('admin.roles.show');
 Route::post('roles', [RoleController::class, 'store'])->name('admin.roles.store');
+Route::post('roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('admin.roles.bulk_destroy');
+Route::post('reorder/roles', [RoleController::class, 'updateOrder'])->name('admin.roles.reorder');
+Route::get('roles/{id}', [RoleController::class, 'show'])->name('admin.roles.show');
 Route::post('roles/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
 Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
-Route::post('reorder/roles', [RoleController::class, 'updateOrder'])->name('admin.roles.reorder');
 
 // Permission management (read-only)
 Route::get('permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');

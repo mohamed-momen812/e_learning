@@ -8,6 +8,7 @@ use Modules\Admin\Http\Requests\CreateRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleRequest;
 use Modules\Admin\Http\Requests\IndexRoleRequest;
 use Modules\Admin\Http\Requests\UpdateRoleDisplayOrderRequest;
+use Modules\Admin\Http\Requests\BulkDeleteRoleRequest;
 use Modules\Admin\Services\RoleService;
 use Modules\Admin\Services\ListRoleService;
 use Modules\Admin\Services\UpdateDisplayOrderService;
@@ -64,7 +65,7 @@ class RoleController extends BaseApiController
         );
 
         return $this->createdResponse(
-            new RoleResource($role->load('permissions')), 
+            new RoleResource($role->load('permissions')),
             'role.created'
         );
     }
@@ -78,7 +79,7 @@ class RoleController extends BaseApiController
         $role = $this->service->findOrFail($id);
 
         return $this->successResponse(
-            new RoleResource($role->load('permissions')), 
+            new RoleResource($role->load('permissions')),
             'data.retrieved'
         );
     }
@@ -97,7 +98,7 @@ class RoleController extends BaseApiController
         );
 
         return $this->successResponse(
-            new RoleResource($role->load('permissions')), 
+            new RoleResource($role->load('permissions')),
             'role.updated'
         );
     }
@@ -114,18 +115,35 @@ class RoleController extends BaseApiController
     }
 
     /**
+     * Bulk delete roles
+     */
+    public function bulkDestroy(BulkDeleteRoleRequest $request): JsonResponse
+    {
+        $this->authorizeRoleAccess();
+
+        $result = $this->service->bulkDeleteRoles($request->validated('ids'));
+
+        $message = 'role.bulk_deleted';
+        if ($result['skipped_count'] > 0) {
+            $message = 'role.bulk_deleted_with_skipped';
+        }
+
+        return $this->successResponse($result, $message);
+    }
+
+    /**
      * Update display order for roles
      */
     public function updateOrder(UpdateRoleDisplayOrderRequest $request): JsonResponse
     {
         $this->authorizeRoleAccess();
-        
+
         if ($request->has('ids')) {
             $this->orderService->reorderRolesByIds($request->validated('ids'));
         } else {
             $this->orderService->updateRoleOrder($request->validated('orders'));
         }
-        
+
         return $this->successResponse(null, 'role.order_updated');
     }
 
@@ -135,7 +153,7 @@ class RoleController extends BaseApiController
     protected function authorizeRoleAccess(): void
     {
         if (!Auth::user()?->hasRole('teacher')) {
-            abort(403, 'Only teachers can manage roles');
+            abort(403, __('role.only_teachers_can_manage_roles'));
         }
     }
 }
