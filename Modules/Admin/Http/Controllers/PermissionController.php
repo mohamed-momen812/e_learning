@@ -73,8 +73,8 @@ class PermissionController extends BaseApiController
         } else {
             $this->orderService->updatePermissionOrder($request->validated('orders'));
         }
-        
-        return $this->successResponse(null, 'permission.order_updated');
+
+        return $this->successResponse(null, 'permissions.order_updated');
     }
 }
 
