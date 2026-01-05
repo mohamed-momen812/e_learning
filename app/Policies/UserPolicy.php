@@ -79,5 +79,13 @@ class UserPolicy
     {
         return $user->can('users.update_order');
     }
+
+    /**
+     * Determine if the user can manage direct permissions for users.
+     */
+    public function managePermissions(User $user): bool
+    {
+        return $user->can('users.manage_permissions');
+    }
 }
 

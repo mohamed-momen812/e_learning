@@ -54,6 +54,7 @@ class AdminSeeder extends Seeder
                 'users.delete',
                 'users.bulk_delete',
                 'users.update_order',
+                'users.manage_permissions',
             ]);
             $superAdminRole->givePermissionTo([
                 'roles.create',

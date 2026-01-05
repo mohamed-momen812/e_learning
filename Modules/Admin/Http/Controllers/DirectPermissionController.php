@@ -1,0 +1,88 @@
+<?php
+
+namespace Modules\Admin\Http\Controllers;
+
+use App\Core\Controllers\BaseApiController;
+use App\Http\Resources\DirectPermissionResource;
+use App\Models\User;
+use App\Services\DirectPermissionService;
+use Modules\Admin\Http\Requests\AssignDirectPermissionRequest;
+use Modules\Admin\Http\Requests\RevokeDirectPermissionRequest;
+use Illuminate\Http\JsonResponse;
+
+class DirectPermissionController extends BaseApiController
+{
+    public function __construct(
+        protected DirectPermissionService $service
+    ) {
+        // Authorization is handled via policies in each method
+    }
+
+    /**
+     * Assign direct permissions to a user.
+     */
+    public function assign(AssignDirectPermissionRequest $request, string $userId): JsonResponse
+    {
+        $this->authorize('managePermissions', User::class);
+
+        $user = User::findOrFail($userId);
+
+        $validated = $request->validated();
+
+        $this->service->assign(
+            user: $user,
+            permissions: $validated['permissions'],
+        );
+
+        // Refresh user to get updated permissions
+        $user->refresh();
+        $directPermissions = $this->service->getDirectPermissions($user);
+
+        return $this->successResponse(
+            DirectPermissionResource::collection($directPermissions),
+            'permission.assigned_successfully'
+        );
+    }
+
+    /**
+     * Revoke direct permissions from a user.
+     */
+    public function revoke(RevokeDirectPermissionRequest $request, string $userId): JsonResponse
+    {
+        $this->authorize('managePermissions', User::class);
+
+        $user = User::findOrFail($userId);
+
+        $validated = $request->validated();
+
+        $this->service->revoke(
+            user: $user,
+            permissions: $validated['permissions'],
+        );
+
+        // Refresh user to get updated permissions
+        $user->refresh();
+        $directPermissions = $this->service->getDirectPermissions($user);
+
+        return $this->successResponse(
+            DirectPermissionResource::collection($directPermissions),
+            'permission.revoked_successfully'
+        );
+    }
+
+    /**
+     * Get all direct permissions for a user.
+     */
+    public function show(string $userId): JsonResponse
+    {
+        $this->authorize('managePermissions', User::class);
+
+        $user = User::findOrFail($userId);
+        $directPermissions = $this->service->getDirectPermissions($user);
+
+        return $this->successResponse(
+            DirectPermissionResource::collection($directPermissions),
+            'permission.retrieved_successfully'
+        );
+    }
+}

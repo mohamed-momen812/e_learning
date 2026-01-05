@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\UserController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\PermissionController;
+use Modules\Admin\Http\Controllers\DirectPermissionController;
 
 // Routes are loaded via RouteServiceProvider with:
 // - Tenant middleware (InitializeTenancyByHeader)
@@ -19,6 +20,10 @@ Route::get('users/{id}', [UserController::class, 'show'])->name('admin.users.sho
 Route::post('users/{id}', [UserController::class, 'update'])->name('admin.users.update');
 Route::delete('users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
+Route::get('users/{id}/direct-permissions', [DirectPermissionController::class, 'show'])->name('admin.users.direct_permissions.show');
+Route::post('users/{id}/direct-permissions/assign', [DirectPermissionController::class, 'assign'])->name('admin.users.direct_permissions.assign');
+Route::post('users/{id}/direct-permissions/revoke', [DirectPermissionController::class, 'revoke'])->name('admin.users.direct_permissions.revoke');
+
 Route::get('roles', [RoleController::class, 'index'])->name('admin.roles.index');
 Route::post('roles', [RoleController::class, 'store'])->name('admin.roles.store');
 Route::post('roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('admin.roles.bulk_destroy');
@@ -27,7 +32,6 @@ Route::get('roles/{id}', [RoleController::class, 'show'])->name('admin.roles.sho
 Route::post('roles/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
 Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
-// Permission management (read-only)
 Route::get('permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
 Route::get('permissions/{id}', [PermissionController::class, 'show'])->name('admin.permissions.show');
 Route::post('reorder/permissions', [PermissionController::class, 'updateOrder'])->name('admin.permissions.reorder');

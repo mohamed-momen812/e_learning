@@ -138,6 +138,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'users.delete' => ['en' => 'Delete Users', 'ar' => 'حذف المستخدمين'],
             'users.bulk_delete' => ['en' => 'Bulk Delete Users', 'ar' => 'حذف المستخدمين بالجملة'],
             'users.update_order' => ['en' => 'Update User Order', 'ar' => 'تحديث ترتيب المستخدمين'],
+            'users.manage_permissions' => ['en' => 'Manage User Direct Permissions', 'ar' => 'إدارة الصلاحيات المباشرة للمستخدمين'],
 
             // Role management permissions
             'roles.create' => ['en' => 'Create Roles', 'ar' => 'إنشاء الأدوار'],
@@ -278,6 +279,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'users.delete',
             'users.bulk_delete',
             'users.update_order',
+            'users.manage_permissions',
             'roles.create',
             'roles.view',
             'roles.update',

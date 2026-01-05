@@ -36,6 +36,7 @@ class UserResource extends JsonResource
                     ];
                 });
             }),
+            'direct_permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
 
             // Timestamps
             'created_at' => $this->created_at?->toISOString(),
