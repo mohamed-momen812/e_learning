@@ -5,4 +5,5 @@ return [
     App\Providers\AuthServiceProvider::class,
     Nwidart\Modules\LaravelModulesServiceProvider::class,
     App\Providers\TenancyServiceProvider::class,
+    App\Providers\TelescopeServiceProvider::class,
 ];
