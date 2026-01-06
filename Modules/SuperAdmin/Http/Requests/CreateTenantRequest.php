@@ -27,7 +27,7 @@ class CreateTenantRequest extends FormRequest
             'name' => ['required', 'array'],
             'name.en' => ['required', 'string', 'max:255'],
             'name.ar' => ['required', 'string', 'max:255'],
-            'domains' => ['required', 'array', 'min:1'],
+            'domains' => ['required', 'array', 'min:1', 'max:3'],
             'domains.*' => [
                 'required',
                 'string',
