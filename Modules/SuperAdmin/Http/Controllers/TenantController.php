@@ -30,7 +30,7 @@ class TenantController extends BaseApiController
         $defaultFilters = [];
         $defaultSearch = '';
         $defaultSort = 'display_order';
-        $defaultPerPage = 15;
+        $defaultPerPage = 10;
         $defaultPage = 1;
 
         $params = [
