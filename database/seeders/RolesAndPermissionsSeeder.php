@@ -38,6 +38,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create roles and assign permissions
         $this->createRolesAndAssignPermissions($isCentralDatabase);
+
+        // Final cache clear after everything is done (needed)
+        $registrar->forgetCachedPermissions();
     }
 
     /**
