@@ -64,8 +64,8 @@ class SelectOptionsService
                 ->get()
                 ->map(function (Role $role): array {
                     return [
-                        'id' => $role->id,
-                        'key' => $role->name,
+                    'original_id' => $role->id,
+                    'id' => $role->name,
                         'label' => $role->label, // Translated label
                     ];
                 })
@@ -89,8 +89,8 @@ class SelectOptionsService
                 ->get()
                 ->map(function (Permission $permission): array {
                     return [
-                        'id' => $permission->id,
-                        'key' => $permission->name,
+                    'original_id' => $permission->id,
+                    'id' => $permission->name,
                         'label' => $permission->label ?? $permission->name,
                     ];
                 })
@@ -117,8 +117,7 @@ class SelectOptionsService
             return $query->get()
                 ->map(function (User $user): array {
                     return [
-                        'id' => $user->id,
-                        'key' => $user->id,
+                    'id' => $user->id,
                         'label' => $user->name,
                     ];
                 })
