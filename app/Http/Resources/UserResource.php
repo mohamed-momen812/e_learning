@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'email_verified_at' => $this->email_verified_at?->toISOString(),
             'is_super_admin' => $this->when($this->is_super_admin !== null, $this->is_super_admin),
+            'is_active' => $this->when($this->is_active !== null, $this->is_active),
             'display_order' => $this->when($this->display_order !== null, $this->display_order),
 
             // Relationships

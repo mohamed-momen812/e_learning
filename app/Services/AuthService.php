@@ -32,6 +32,15 @@ class AuthService
             );
         }
 
+        // Check if user is active
+        if (! $user->is_active) {
+            throw new BusinessException(
+                'auth.account_inactive',
+                ['email' => ['auth.account_inactive']],
+                403
+            );
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
         $expiresIn = config('sanctum.expiration', 1440) * 60;
 
@@ -59,6 +68,15 @@ class AuthService
                 'auth.invalid_credentials',
                 ['email' => ['auth.invalid_credentials']],
                 401
+            );
+        }
+
+        // Check if user is active
+        if (! $user->is_active) {
+            throw new BusinessException(
+                'auth.account_inactive',
+                ['email' => ['auth.account_inactive']],
+                403
             );
         }
 
@@ -101,6 +119,15 @@ class AuthService
             );
         }
 
+        // Check if user is active
+        if (! $user->is_active) {
+            throw new BusinessException(
+                'auth.account_inactive',
+                ['email' => ['auth.account_inactive']],
+                403
+            );
+        }
+
         // Only allow super admin users
         if (! $user->isSuperAdmin()) {
             throw new BusinessException(
@@ -135,6 +162,7 @@ class AuthService
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
+            'is_active' => $data['is_active'] ?? true,
             'display_order' => $maxOrder + 1,
         ]);
 

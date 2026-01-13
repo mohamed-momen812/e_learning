@@ -41,6 +41,10 @@ class ListUserService
             $query->where('email', 'like', '%'.$filters['email'].'%');
         }
 
+        if (isset($filters['is_active'])) {
+            $query->where('is_active', $filters['is_active']);
+        }
+
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')

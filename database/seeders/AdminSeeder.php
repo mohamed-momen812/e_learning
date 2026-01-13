@@ -36,6 +36,7 @@ class AdminSeeder extends Seeder
                 'password' => Hash::make('mawsoaa@0005000'), // Change this in production!
                 'email_verified_at' => now(),
                 'is_super_admin' => true,
+                'is_active' => true,
             ]);
 
             // Assign superadmin role

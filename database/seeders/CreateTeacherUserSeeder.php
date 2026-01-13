@@ -36,6 +36,7 @@ class CreateTeacherUserSeeder extends Seeder
             'password' => $tenantFromCentral->password,
             'phone' => $tenantFromCentral->phone ?? null,
             'email_verified_at' => now(),
+            'is_active' => true,
         ]);
 
         // Assign teacher role

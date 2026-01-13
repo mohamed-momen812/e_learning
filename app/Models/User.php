@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'is_super_admin',
+        'is_active',
         'display_order',
     ];
 
@@ -52,6 +53,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_super_admin' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 

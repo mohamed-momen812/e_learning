@@ -28,6 +28,7 @@ class UserService
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
+            'is_active' => $data['is_active'] ?? true,
             'display_order' => $maxOrder + 1,
         ]);
 
@@ -81,6 +82,10 @@ class UserService
 
         if (isset($data['phone'])) {
             $updateData['phone'] = $data['phone'];
+        }
+
+        if (isset($data['is_active'])) {
+            $updateData['is_active'] = $data['is_active'];
         }
 
         if (isset($data['password'])) {
