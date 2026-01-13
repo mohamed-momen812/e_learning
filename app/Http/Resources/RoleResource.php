@@ -17,7 +17,7 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'label' => $this->label, // UI display - translated
+            'label' => $this->getTranslations('label'),
             'guard_name' => $this->guard_name,
 
             // Relationships

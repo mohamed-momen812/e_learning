@@ -17,7 +17,7 @@ class PermissionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name, // System identifier - never translated
-            'label' => $this->label, // UI display - translated
+            'label' => $this->getTranslations('label'),
             // Timestamps
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
