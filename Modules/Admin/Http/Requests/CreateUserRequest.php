@@ -23,7 +23,28 @@ class CreateUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if ($value === null || $value === '') {
+                        return; // Allow null/empty values since it's nullable
+                    }
+                    
+                    // Remove spaces, dashes, and parentheses
+                    $cleaned = preg_replace('/[\s\-()]/', '', $value);
+                    
+                    // Egypt phone patterns:
+                    // 01 followed by 9 digits (01XXXXXXXXX)
+                    // 201 or +201 followed by 9 digits (201XXXXXXXXX or +201XXXXXXXXX)
+                    $egyptPattern = '/^(01\d{9}|(\+?20)?1\d{9})$/';
+                    
+                    if (!preg_match($egyptPattern, $cleaned)) {
+                        $fail(__('validation.phone.egypt', ['attribute' => $attribute]));
+                    }
+                },
+            ],
             'password' => ['required', 'string', 'min:8'],
             'roles' => ['sometimes', 'array'],
             'roles.*' => ['sometimes', 'string', Rule::exists('roles', 'name')->where('guard_name', 'web')],

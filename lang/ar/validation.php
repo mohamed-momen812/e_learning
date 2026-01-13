@@ -31,6 +31,9 @@ return [
     'regex' => 'تنسيق :attribute غير صالح',
     'image' => 'يجب أن يكون :attribute صورة',
     'mimes' => 'يجب أن يكون :attribute ملف من نوع: :values',
+    'phone' => [
+        'egypt' => 'يجب أن يكون :attribute رقم هاتف مصري صحيح (مثل: 01XXXXXXXXX أو 201XXXXXXXXX أو +201XXXXXXXXX).',
+    ],
 
     /*
     |--------------------------------------------------------------------------

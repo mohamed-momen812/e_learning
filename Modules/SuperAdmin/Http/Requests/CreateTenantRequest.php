@@ -45,6 +45,23 @@ class CreateTenantRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('tenants', 'phone')->ignore($tenantId),
+                function ($attribute, $value, $fail) {
+                    if ($value === null || $value === '') {
+                        return; // Allow null/empty values since it's nullable
+                    }
+
+                    // Remove spaces, dashes, and parentheses
+                    $cleaned = preg_replace('/[\s\-()]/', '', $value);
+
+                    // Egypt phone patterns:
+                    // 01 followed by 9 digits (01XXXXXXXXX)
+                    // 201 or +201 followed by 9 digits (201XXXXXXXXX or +201XXXXXXXXX)
+                    $egyptPattern = '/^(01\d{9}|(\+?20)?1\d{9})$/';
+
+                    if (!preg_match($egyptPattern, $cleaned)) {
+                        $fail(__('validation.phone.egypt', ['attribute' => $attribute]));
+                    }
+                },
             ],
             'is_active' => ['sometimes', 'boolean'],
             'password' => $this->isMethod('POST') && ! $tenantId ? ['required', 'string', 'min:8'] : ['nullable', 'string', 'min:8'],

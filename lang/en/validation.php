@@ -31,6 +31,9 @@ return [
     'regex' => 'The :attribute format is invalid',
     'image' => 'The :attribute must be an image',
     'mimes' => 'The :attribute must be a file of type: :values',
+    'phone' => [
+        'egypt' => 'The :attribute must be a valid Egyptian phone number (e.g., 01XXXXXXXXX, 201XXXXXXXXX, or +201XXXXXXXXX).',
+    ],
 
     /*
     |--------------------------------------------------------------------------
