@@ -24,6 +24,8 @@ class IndexRoleRequest extends FormRequest
             'with.*' => 'sometimes|string|in:permissions',
             'filters' => 'sometimes|array',
             'filters.name' => 'sometimes|string|max:255',
+            'filters.permission' => 'sometimes|string|array',
+            'filters.permission.*' => 'sometimes|string|max:255',
             'search' => 'sometimes|string|max:255',
             'sort' => 'sometimes|string',
             'per_page' => 'sometimes|integer|min:1|max:100',

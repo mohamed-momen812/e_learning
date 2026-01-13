@@ -33,6 +33,22 @@ class ListRoleService
             $query->where('name', 'like', '%'.$filters['name'].'%');
         }
 
+        // Filter by permission(s)
+        if (isset($filters['permission'])) {
+            $permission = $filters['permission'];
+            if (is_array($permission)) {
+                // Multiple permissions: roles that have ANY of these permissions
+                $query->whereHas('permissions', function ($q) use ($permission) {
+                    $q->whereIn('name', $permission);
+                });
+            } else {
+                // Single permission
+                $query->whereHas('permissions', function ($q) use ($permission) {
+                    $q->where('name', $permission);
+                });
+            }
+        }
+
         // Search
         if (! empty($search)) {
             $query->where('name', 'like', '%'.$search.'%');
