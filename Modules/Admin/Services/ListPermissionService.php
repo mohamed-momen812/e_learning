@@ -30,7 +30,11 @@ class ListPermissionService
 
         // Search
         if (! empty($search)) {
-            $query->where('name', 'like', '%'.$search.'%');
+            $query->where(function ($q) use ($search) {
+                // Search in label JSON field for all supported locales (en, ar)
+                $q->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(label, "$.en")) LIKE ?', ['%' . $search . '%'])
+                    ->orWhereRaw('JSON_UNQUOTE(JSON_EXTRACT(label, "$.ar")) LIKE ?', ['%' . $search . '%']);
+            });
         }
 
         // Apply dynamic ordering
