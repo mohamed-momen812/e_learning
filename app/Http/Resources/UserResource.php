@@ -31,7 +31,8 @@ class UserResource extends JsonResource
             'roles' => $this->whenLoaded('roles', function () {
                 return $this->roles->map(function ($role) {
                     return [
-                        'id' => $role->id,
+                        'original_id' => $role->id,
+                        'id' => $role->name,
                         'label' => $role->label,
                     ];
                 });
