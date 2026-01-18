@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\Tenant;
+use Modules\Tenants\Models\Tenant;
 use Stancl\Tenancy\Database\Models\Domain;
 
 return [

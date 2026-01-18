@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Tenants\Models;
 
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;

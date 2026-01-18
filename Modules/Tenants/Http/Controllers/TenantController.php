@@ -3,8 +3,8 @@
 namespace Modules\Tenants\Http\Controllers;
 
 use App\Core\Controllers\BaseApiController;
-use App\Http\Resources\TenantResource;
-use App\Models\Tenant;
+use Modules\Tenants\Http\Resources\TenantResource;
+use Modules\Tenants\Models\Tenant;
 use Illuminate\Http\JsonResponse;
 use Modules\Tenants\Http\Requests\BulkDeleteTenantRequest;
 use Modules\Tenants\Http\Requests\CreateTenantRequest;

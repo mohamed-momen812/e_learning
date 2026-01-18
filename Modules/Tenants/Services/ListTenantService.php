@@ -3,7 +3,7 @@
 namespace Modules\Tenants\Services;
 
 use App\Core\Traits\HasDynamicOrdering;
-use App\Models\Tenant;
+use Modules\Tenants\Models\Tenant;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListTenantService

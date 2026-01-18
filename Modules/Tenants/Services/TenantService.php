@@ -2,7 +2,7 @@
 
 namespace Modules\Tenants\Services;
 
-use App\Models\Tenant;
+use Modules\Tenants\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

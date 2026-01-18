@@ -2,6 +2,8 @@
 
 namespace Modules\Tenants\Providers;
 
+use Modules\Tenants\Models\Tenant;
+use Modules\Tenants\Policies\TenantPolicy;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -16,11 +18,16 @@ class TenantsServiceProvider extends ServiceProvider
 
     protected string $nameLower = 'tenants';
 
+    protected $policies = [
+        Tenant::class => TenantPolicy::class,
+    ];
+
     /**
      * Boot the application events.
      */
     public function boot(): void
     {
+        $this->registerPolicies();
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
@@ -36,6 +43,16 @@ class TenantsServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Register policies.
+     */
+    protected function registerPolicies(): void
+    {
+        foreach ($this->policies as $model => $policy) {
+            $this->app['Illuminate\Contracts\Auth\Access\Gate']->policy($model, $policy);
+        }
     }
 
     /**

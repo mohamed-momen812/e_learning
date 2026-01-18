@@ -80,7 +80,7 @@ class CreateTenantRequest extends FormRequest
 
             // For update, get existing domains to exclude from unique validation
             if ($tenantId) {
-                $tenant = \App\Models\Tenant::with('domains')->find($tenantId);
+                $tenant = \Modules\Tenants\Models\Tenant::with('domains')->find($tenantId);
                 if ($tenant) {
                     $existingDomains = $tenant->domains->pluck('domain')->toArray();
                 }

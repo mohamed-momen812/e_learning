@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Policies;
+namespace Modules\Tenants\Policies;
 
-use App\Models\Tenant;
+use Modules\Tenants\Models\Tenant;
 use App\Models\User;
 
 class TenantPolicy

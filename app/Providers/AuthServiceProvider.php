@@ -4,14 +4,11 @@ namespace App\Providers;
 
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\Tenant;
 use App\Models\User;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
-use App\Policies\TenantPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -22,7 +19,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
-        Tenant::class => TenantPolicy::class,
         Role::class => RolePolicy::class,
         Permission::class => PermissionPolicy::class,
     ];
