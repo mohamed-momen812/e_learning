@@ -40,15 +40,15 @@ class UserService
         // Assign roles if provided (but filter out admin roles)
         // Admin roles are those that have permissions only admins should have
         if (isset($data['roles']) && is_array($data['roles'])) {
-            // Filter out roles that have admin-only permissions (like roles.create)
+            // Filter out role admin only
             $filteredRoles = array_filter($data['roles'], function ($roleName) {
                 $role = Role::where('name', $roleName)->where('guard_name', 'web')->first();
                 if (! $role) {
                     return false;
                 }
 
-                // Filter out roles that have admin-only permissions
-                return ! $role->hasPermissionTo('roles.create');
+                // Filter out role admin only
+                return $role->name !== 'admin';
             });
             if (! empty($filteredRoles)) {
                 $user->assignRole($filteredRoles);
@@ -65,8 +65,8 @@ class UserService
     {
         $user = User::with('roles')->findOrFail($id);
 
-        // Prevent updating admin users (users with admin-only permissions)
-        if ($user->can('roles.create')) {
+        // Prevent updating admin users (users with admin-only role)
+        if ($user->hasRole('admin')) {
             abort(404, __('user.cannot_update_admin_user'));
         }
 
@@ -103,15 +103,15 @@ class UserService
 
         // Sync roles if provided (but prevent assigning admin roles)
         if (isset($data['roles']) && is_array($data['roles'])) {
-            // Filter out roles that have admin-only permissions
+            // Filter out role admin only
             $filteredRoles = array_filter($data['roles'], function ($roleName) {
                 $role = \App\Models\Role::where('name', $roleName)->where('guard_name', 'web')->first();
                 if (! $role) {
                     return false;
                 }
 
-                // Filter out roles that have admin-only permissions
-                return ! $role->hasPermissionTo('roles.create');
+                // Filter out role admin only
+                return $role->name !== 'admin';
             });
             $user->syncRoles($filteredRoles);
         }
@@ -126,8 +126,8 @@ class UserService
     {
         $user = User::with('roles')->findOrFail($id);
 
-        // Prevent deleting admin users (users with admin-only permissions)
-        if ($user->can('roles.create')) {
+        // Prevent deleting admin users (users with admin-only role)
+        if ($user->hasRole('admin')) {
             abort(404, __('user.cannot_delete_admin_user'));
         }
 
@@ -145,8 +145,8 @@ class UserService
         $skipped = [];
 
         foreach ($users as $user) {
-            // Prevent deleting admin users (users with admin-only permissions)
-            if ($user->can('roles.create')) {
+            // Prevent deleting admin users (users with admin-only role)
+            if ($user->hasRole('admin')) {
                 $skipped[] = [
                     'id' => $user->id,
                     'reason' => __('user.cannot_delete_admin_user'),
@@ -175,7 +175,7 @@ class UserService
         $user = User::with('roles')->find($id);
 
         // Exclude admin users (users with admin-only permissions)
-        if ($user && $user->can('roles.create')) {
+        if ($user && $user->hasRole('admin')) {
             return null;
         }
 
@@ -190,7 +190,7 @@ class UserService
         $user = User::with('roles')->findOrFail($id);
 
         // Exclude admin users (users with admin-only permissions)
-        if ($user->can('roles.create')) {
+        if ($user->hasRole('admin')) {
             abort(404, __('user.cannot_find_admin_user'));
         }
 
