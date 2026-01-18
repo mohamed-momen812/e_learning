@@ -28,6 +28,15 @@ class ListPermissionService
             $query->where('name', 'like', '%' . $filters['name'] . '%');
         }
 
+        // Filter by created_at date range
+        if (isset($filters['created_at_from'])) {
+            $query->whereDate('created_at', '>=', $filters['created_at_from']);
+        }
+
+        if (isset($filters['created_at_to'])) {
+            $query->whereDate('created_at', '<=', $filters['created_at_to']);
+        }
+
         // Search
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {

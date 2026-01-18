@@ -26,6 +26,8 @@ class IndexUserRequest extends FormRequest
             'filters.role' => 'sometimes|string',
             'filters.email' => 'sometimes|string|max:255',
             'filters.is_active' => 'sometimes|boolean',
+            'filters.created_at_from' => 'sometimes|date',
+            'filters.created_at_to' => 'sometimes|date',
             'search' => 'sometimes|string|max:255',
             'sort' => 'sometimes|string',
             'per_page' => 'sometimes|integer|min:1|max:100',

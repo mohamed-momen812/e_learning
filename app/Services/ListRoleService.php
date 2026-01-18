@@ -36,17 +36,18 @@ class ListRoleService
         // Filter by permission(s)
         if (isset($filters['permission'])) {
             $permission = $filters['permission'];
-            if (is_array($permission)) {
-                // Multiple permissions: roles that have ANY of these permissions
-                $query->whereHas('permissions', function ($q) use ($permission) {
-                    $q->whereIn('name', $permission);
-                });
-            } else {
-                // Single permission
-                $query->whereHas('permissions', function ($q) use ($permission) {
-                    $q->where('name', $permission);
-                });
-            }
+            $query->whereHas('permissions', function ($q) use ($permission) {
+                $q->where('name', $permission);
+            });
+        }
+
+        // Filter by created_at date range
+        if (isset($filters['created_at_from'])) {
+            $query->whereDate('created_at', '>=', $filters['created_at_from']);
+        }
+
+        if (isset($filters['created_at_to'])) {
+            $query->whereDate('created_at', '<=', $filters['created_at_to']);
         }
 
         // Search

@@ -36,6 +36,15 @@ class ListTenantService
             $query->where('is_active', $filters['is_active']);
         }
 
+        // Filter by created_at date range
+        if (isset($filters['created_at_from'])) {
+            $query->whereDate('created_at', '>=', $filters['created_at_from']);
+        }
+
+        if (isset($filters['created_at_to'])) {
+            $query->whereDate('created_at', '<=', $filters['created_at_to']);
+        }
+
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
