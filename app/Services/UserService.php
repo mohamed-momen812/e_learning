@@ -38,7 +38,7 @@ class UserService
         }
 
         // Assign roles if provided (but filter out admin roles)
-        // Admin roles are those that have permissions only teachers should have
+        // Admin roles are those that have permissions only admins should have
         if (isset($data['roles']) && is_array($data['roles'])) {
             // Filter out roles that have admin-only permissions (like roles.create)
             $filteredRoles = array_filter($data['roles'], function ($roleName) {

@@ -7,11 +7,11 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
-class CreateTeacherUserSeeder extends Seeder
+class CreateAdminUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     * Creates teacher user from tenant's data field.
+     * Creates admin user from tenant's data field.
      */
     public function run(): void
     {
@@ -22,7 +22,7 @@ class CreateTeacherUserSeeder extends Seeder
             return;
         }
 
-        // Get teacher_user data from tenant's data field in central database
+        // Get admin user data from tenant's data field in central database
         $tenantFromCentral = Tenant::on('central')->find($tenant->id);
 
         if (! $tenantFromCentral) {
@@ -39,10 +39,10 @@ class CreateTeacherUserSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // Assign teacher role
-        $teacherRole = Role::where('name', 'teacher')->first();
-        if ($teacherRole) {
-            $user->assignRole($teacherRole);
+        // Assign admin role
+        $adminRole = Role::where('name', 'admin')->first();
+        if ($adminRole) {
+            $user->assignRole($adminRole);
         }
     }
 }

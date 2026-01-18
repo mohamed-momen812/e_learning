@@ -24,9 +24,9 @@ class ListUserService
 
         $query = User::query();
 
-        // Exclude admin users (teacher and assistant roles)
+        // Exclude admin users (admin and assistant roles)
         $query->whereDoesntHave('roles', function ($q) {
-            $q->whereIn('name', ['teacher']);
+            $q->whereIn('name', ['admin']);
         });
 
         if (! empty($with)) {

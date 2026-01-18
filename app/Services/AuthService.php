@@ -53,8 +53,8 @@ class AuthService
     }
 
     /**
-     * Authenticate admin user (teacher/assistant) and return token
-     * Only allows users with teacher or assistant roles
+     * Authenticate admin user (admin/assistant) and return token
+     * Only allows users with admin or assistant roles
      *
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>

@@ -57,7 +57,7 @@ class AuthController extends BaseApiController
     }
 
     /**
-     * Login admin (only teacher/assistant users can login here)
+     * Login admin (only admin/assistant users can login here)
      */
     public function adminLogin(LoginRequest $request): JsonResponse
     {

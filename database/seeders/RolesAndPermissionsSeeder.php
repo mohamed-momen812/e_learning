@@ -201,7 +201,11 @@ class RolesAndPermissionsSeeder extends Seeder
             $superAdmin->syncPermissions($this->getSuperAdminPermissions());
         }
 
-        // Create teacher role
+        // Create admin role (main role in tenant context)
+        $admin = $this->createRole('admin', ['en' => 'Admin', 'ar' => 'مدير']);
+        $admin->syncPermissions($this->getAdminPermissions());
+
+        // Create teacher role (helper role)
         $teacher = $this->createRole('teacher', ['en' => 'Teacher', 'ar' => 'معلم']);
         $teacher->syncPermissions($this->getTeacherPermissions());
 
@@ -235,33 +239,38 @@ class RolesAndPermissionsSeeder extends Seeder
     }
 
     /**
-     * Get permissions for teacher role.
+     * Get permissions for admin role (main role in tenant context).
      */
-    protected function getTeacherPermissions(): array
+    protected function getAdminPermissions(): array
     {
         return [
             'courses.create',
+            'courses.view',
             'courses.update',
             'courses.delete',
             'courses.bulk_delete',
             'courses.update_order',
             'courses.publish',
             'lessons.create',
+            'lessons.view',
             'lessons.update',
             'lessons.delete',
             'lessons.bulk_delete',
             'lessons.update_order',
             'students.create',
+            'students.view',
             'students.update',
             'students.delete',
             'students.bulk_delete',
             'students.update_order',
             'enrollments.create',
+            'enrollments.view',
             'enrollments.update',
             'enrollments.delete',
             'enrollments.bulk_delete',
             'enrollments.update_order',
             'exams.create',
+            'exams.view',
             'exams.update',
             'exams.delete',
             'exams.bulk_delete',
@@ -291,6 +300,26 @@ class RolesAndPermissionsSeeder extends Seeder
             'permissions.view',
             'permissions.update_order',
             'permissions.bulk_delete',
+        ];
+    }
+
+    /**
+     * Get permissions for teacher role (helper role).
+     */
+    protected function getTeacherPermissions(): array
+    {
+        return [
+            'courses.view',
+            'courses.update',
+            'lessons.view',
+            'lessons.update',
+            'students.view',
+            'enrollments.view',
+            'exams.view',
+            'exams.grade',
+            'attendance.view',
+            'attendance.mark',
+            'reports.view',
         ];
     }
 

@@ -14,7 +14,7 @@ class TenantDatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            CreateTeacherUserSeeder::class,
+            CreateAdminUserSeeder::class,
         ]);
     }
 }

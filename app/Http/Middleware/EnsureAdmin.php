@@ -26,8 +26,8 @@ class EnsureAdmin
             );
         }
 
-        // Only allow teacher or assistant users
-        if (! $user->hasAnyRole(['teacher', 'assistant'])) {
+        // Only allow admin or assistant users
+        if (! $user->hasAnyRole(['admin'])) {
             throw new BusinessException(
                 'auth.unauthorized_admin_access',
                 [],

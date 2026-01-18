@@ -33,7 +33,7 @@ Route::middleware([
         Route::get('/select-options/users', [SelectOptionsController::class, 'users']);
     });
 
-    // Admin routes - for teacher and assistant dashboard
+    // Admin routes - for admin and assistant dashboard
     Route::prefix('admin')->group(function () {
         Route::prefix('auth')->group(function () {
             Route::post('/login', [AuthController::class, 'adminLogin']);
