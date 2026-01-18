@@ -1,0 +1,32 @@
+{
+    "name": "nwidart/tenants",
+    "description": "",
+    "authors": [
+        {
+            "name": "Mohamed momen",
+            "email": "momen@mawsoaa.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [ ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Tenants\\": "app/",
+            "Modules\\Tenants\\Http\\": "Http/",
+            "Modules\\Tenants\\Services\\": "Services/",
+            "Modules\\Tenants\\Database\\Factories\\": "database/factories/",
+            "Modules\\Tenants\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Tenants\\Tests\\": "tests/"
+        }
+    }
+}
